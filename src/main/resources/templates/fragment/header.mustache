@@ -1,0 +1,45 @@
+<!DOCTYPE HTML>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+    {{#title}}
+        <title>{{title}}</title>
+    {{/title}}
+    {{^title}}
+        <title>Nossa Senhora da Assunção</title>
+    {{/title}}
+
+    <script src="public/index.js" defer></script>
+    <link rel="stylesheet" href="public/styles.css">
+    <link rel="icon" type="image/x-icon" href="/public/images/svg-2.svg">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
+</head>
+<body>
+
+
+<nav>
+    <div id="navbar">
+        <a id="logo" href="/">
+            <img src="/public/images/svg-2.svg" height="25px" width="25px" alt="">
+            <h1>your name</h1>
+        </a>
+        <div id="options">
+            <!--<a href="#">home</a>
+            <a href="#">about</a>
+            <a href="#">loren</a>-->
+
+
+            {{#user}}
+                <span>Conectado como: {{user.name}}</span>
+                <a id="login-link" href="/api/logout">sair</a>
+            {{/user}}
+            {{^user}}
+                <a id="login-link" href="/entrar">entrar</a>
+            {{/user}}
+
+
+        </div>
+    </div>
+</nav>

@@ -1,0 +1,14 @@
+efi:
+  client_id: ${EFI_CLIENT_ID} #Client_Id_ba252dc29671b01ca35f75f324927170a0770df5
+  client_secret: ${EFI_CLIENT_SECRET} #Client_Secret_ea66aaa23b4fc5b85c964ddc00e32d12bceec18b
+  url: ${EFI_URL} #https://pix.api.efipay.com.br
+spring:
+  mustache:
+    suffix: .mustache
+    prefix: classpath:/templates/
+  application:
+    name: Pagamento Carnes
+#trust:
+#  store:
+#    nodeValue: classpath:producao-616112-pagamento-carnes.p12
+#    password:

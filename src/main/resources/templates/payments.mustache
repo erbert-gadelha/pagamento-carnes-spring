@@ -1,0 +1,142 @@
+
+{{>fragment/header}}
+
+
+
+
+<section id="payment-list" class="table_component">
+    <div>
+        {{#user}}
+            <h1> {{name}}</h1>
+        {{/user}}
+        {{^user}}
+            <h1>Fulano da Silva</h1>
+        {{/user}}
+
+        <span>Efetuados: {{closed_payments}}</span>
+        <br>
+        <span>Pendentes: {{remaining_payments}}</span>
+    </div>
+
+
+    <table>
+        <tr>
+            <th>Mês</th>
+            <th>Status</th>
+            <th></th>
+        </tr>
+
+
+        {{#payments}}
+            <tr>
+                <td>{{name}}</td>
+                {{#completeAt}}
+                    <td class="accept">EFETUADO</td>
+                    <td> {{completeAt}}</td>
+                {{/completeAt}}
+                {{^completeAt}}
+                    {{#url}}
+                        <td class="waiting">PENDETE</td>
+                        <td> <a href="{{url}}" target="_blank">{{url}} </a> </td>
+                    {{/url}}
+                    {{^url}}
+                        <td></td>
+                        {{#clickable}}
+                            <td> <a href="{{clickable}}">gerar pix</a> </td>
+                        {{/clickable}}
+                        {{^clickable}}
+                            <td> </td>
+                        {{/clickable}}
+                    {{/url}}
+                {{/completeAt}}
+            </tr>
+        {{/payments}}
+
+    </table>
+
+</section>
+
+
+<style>
+
+  body {
+    background-color: var(--thirdy-color);
+  }
+
+  #payment-list > div {
+    padding: 16px 8px;
+    color: white;
+  }
+
+  .table_component {
+    width: 100%;
+    max-width: 640px;
+  }
+
+  .table_component table {
+      outline: 1px solid black;
+      border-radius: 10px;
+
+      overflow: hidden;
+      height: 100%;
+      width: 100%;
+      table-layout: fixed;
+      border-collapse: collapse;
+      border-spacing: 1px;
+      text-align: left;
+      margin-bottom: 32px;
+      font-size: 0.9rem;
+  }
+
+  .table_component caption {
+      caption-side: top;
+      text-align: left;
+  }
+
+  .table_component th {
+      border: 1px solid #dededf;
+      background-color: #eceff1;
+      color: #000000;
+      color: black;
+      background-color: var(--primary-color);
+      border: var(--primary-color) 1px solid;
+      padding: 5px;
+      padding-top: 10px;
+  }
+
+  .table_component td {
+      border: 1px solid #dededf;
+      color: #000000;
+      padding: 5px;
+  }
+
+
+    .table_component tr {
+      &:nth-child(odd) {background-color: #f2f2f2;}
+      &:nth-child(even) {background-color: #fff;}
+    }
+
+    .accept:after {
+    content: '\2713';
+    display: inline-block;
+    transform: translatex(8px) scale(1.6);
+    color: green;
+  }
+
+  .waiting:after {
+    content: '\25F7';
+    display: inline-block;
+    transform: translate(8px, -1px) scale(1);
+    color: gray;
+  }
+
+
+</style>
+
+
+
+
+<script>
+</script>
+
+{{>fragment/footer}}
