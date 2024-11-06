@@ -54,8 +54,8 @@ public class PaymentService {
         Map<String, Object>[] modelArray = modelList.toArray(new HashMap[0]);
         List<Payment> paymentList = paymentRepository.findByUser(user);
 
-        int expiredMonth = -1;
         int lastMonth = -1;
+        boolean someExpired = false;
         for(Payment payment : paymentList) {
             lastMonth = payment.getPaymentMonth();
             if(payment.getClosedAt() != null) {
@@ -64,31 +64,33 @@ public class PaymentService {
             }
 
             String pixUrl = payment.getPixUrl();
-            if(pixUrl == null) {
-                //paymentRepository.delete(payment);
-                modelArray[lastMonth].put("clickable", "api/create-payment/"+lastMonth+"/2024");
-                lastMonth--;
-                continue;
-            }
-
+            LocalDateTime expiresAt = payment.getExpiresAt();
 
             // NOT EXPIRED
-            if (payment.getExpiresAt() != null) {
-                if (payment.getExpiresAt().isAfter(LocalDateTime.now())) {
-                    modelArray[lastMonth].put("url", payment.getPixUrl());
-                    continue;
-                }
+            if (pixUrl != null && expiresAt != null && expiresAt.isAfter(LocalDateTime.now())) {
+                modelArray[lastMonth].put("url", payment.getPixUrl());
+                continue;
+            } else {
+                System.out.println(payment);
             }
 
-            paymentRepository.delete(payment);
-            modelArray[lastMonth].put("clickable", "api/create-payment/"+lastMonth+"/2024");
-            expiredMonth = lastMonth;
-            lastMonth--;
+            // EXPIRED
+            if(!someExpired) {
+                modelArray[lastMonth].put("clickable", "api/create-payment/" + lastMonth + "/2024");
+                someExpired = true;
+                System.err.println("expired: " + modelArray[lastMonth].get("name"));
+            }
+
+
+            //paymentRepository.delete(payment);
+            //modelArray[lastMonth].put("clickable", "api/create-payment/"+lastMonth+"/2024");
+            //someExpired = true;
+            /*expiredMonth = lastMonth;
+            lastMonth--;*/
         }
 
-        System.out.println("expiredMonth: " + expiredMonth);
 
-        if(expiredMonth == -1) {
+        if(!someExpired) {
             lastMonth++;
             if(lastMonth < modelArray.length)
                 modelArray[lastMonth].put("clickable", "api/create-payment/"+lastMonth+"/2024");

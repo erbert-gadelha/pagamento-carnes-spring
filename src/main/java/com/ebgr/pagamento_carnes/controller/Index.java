@@ -1,6 +1,7 @@
 package com.ebgr.pagamento_carnes.controller;
 
 import com.ebgr.pagamento_carnes.controller.dto.Login;
+import com.ebgr.pagamento_carnes.model.User;
 import com.ebgr.pagamento_carnes.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,8 +52,9 @@ public class Index {
         Login.Request request = new Login.Request(login, password);
         System.out.println(request);
 
-        if(userService.tryToLogin(login, password)) {
-            session.setAttribute("user", new HashMap<>() {{ put("name", request.login()); }});
+        User user = userService.tryToLogin(login, password);
+        if(user != null) {
+            session.setAttribute("user", new HashMap<>() {{ put("name", user.getName()); }});
             //session.setAttribute("username", request.login());
             return "redirect:/";
         }

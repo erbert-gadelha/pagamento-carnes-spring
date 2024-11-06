@@ -3,7 +3,6 @@ package com.ebgr.pagamento_carnes.efi;
 import com.ebgr.pagamento_carnes.efi.dto.CobrancaImediata;
 import com.ebgr.pagamento_carnes.efi.dto.GerarQRCode;
 import com.ebgr.pagamento_carnes.efi.dto.DTO_efi;
-import lombok.Getter;
 import org.apache.hc.client5.http.classic.methods.HttpPost;
 import org.apache.hc.client5.http.entity.UrlEncodedFormEntity;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
@@ -18,10 +17,9 @@ import org.apache.hc.core5.http.io.entity.StringEntity;
 import org.apache.hc.core5.http.io.support.ClassicRequestBuilder;
 import org.apache.hc.core5.http.message.BasicNameValuePair;
 import org.apache.hc.core5.ssl.SSLContextBuilder;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 
 import javax.net.ssl.SSLContext;
+import java.io.ByteArrayInputStream;
 import java.security.KeyStore;
 import java.security.cert.X509Certificate;
 import java.time.LocalDateTime;
@@ -30,20 +28,15 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
-import java.io.FileInputStream;
-import java.io.InputStream;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import java.util.Map;
 
-//@Component
 public class EfiHelperImpl implements EfiHelper {
 
     private final String client_id;
     private final String client_secret;
-    //private final String certificate;
     private final String url;
     private String acessToken;
 
@@ -53,26 +46,18 @@ public class EfiHelperImpl implements EfiHelper {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
 
-    public EfiHelperImpl (String client_id, String client_secret, String url) throws Exception {
+
+    public EfiHelperImpl (String client_id, String client_secret, String url, String base64P12) throws Exception {
         this.client_id = client_id;
         this.client_secret = client_secret;
         this.url = url;
-        //this.certificate = certificate;
 
-        System.err.println("client_id: " + client_id);
-
-
-        if(acessToken != null) {
-            expirationTime = LocalDateTime.MAX;
-            System.err.println("Injetado token definido pelo application.properties");
-        }
-
-
-        // Carregar o KeyStore (certificado .p12)
         KeyStore keyStore = KeyStore.getInstance("PKCS12");
-        try (InputStream keyStoreStream = new FileInputStream("src/main/resources/producao-616112-pagamento-carnes.p12")) {
-            keyStore.load(keyStoreStream, null); // Sem senha
-        }
+        byte[] decodedBytes = Base64.getDecoder().decode(base64P12);
+        keyStore.load(new ByteArrayInputStream(decodedBytes), null);
+
+
+        //try (InputStream keyStoreStream = new FileInputStream("src/main/resources/producao-616112-pagamento-carnes.p12")) {   keyStore.load(keyStoreStream, null);    }
 
         // Criar SSLContext com o keystore
         SSLContext sslContext = SSLContextBuilder.create()
@@ -184,7 +169,7 @@ public class EfiHelperImpl implements EfiHelper {
     }
 
     @Override
-    public void consultarListaDeCobrancas () {
+    public void exibirListaDeCobrancas() {
         tryAuthenticate();
         ClassicHttpRequest request = createHttpsRequest(
                 Method.GET,

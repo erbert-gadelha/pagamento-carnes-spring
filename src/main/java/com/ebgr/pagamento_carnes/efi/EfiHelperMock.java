@@ -6,7 +6,7 @@ import com.ebgr.pagamento_carnes.efi.dto.GerarQRCode;
 
 public class EfiHelperMock implements EfiHelper {
     @Override
-    public void consultarListaDeCobrancas() {
+    public void exibirListaDeCobrancas() {
         System.out.println("""
                 {
                     "parametros": {

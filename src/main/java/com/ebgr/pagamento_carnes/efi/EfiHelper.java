@@ -18,7 +18,7 @@ public interface EfiHelper {
     public String getAcessToken();
     public void setAcessToken(String acessToken);*/
 
-    public void consultarListaDeCobrancas ();
+    public void exibirListaDeCobrancas();
     public CobrancaImediata.Response criarCobrancaImediata (DTO_efi.Devedor devedor, double valor, int expiraEm);
     public GerarQRCode.Response criarQrCode (CobrancaImediata.Response cobrancaImediata);
 }

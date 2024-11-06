@@ -40,7 +40,7 @@ public class Payment {
         this.expiresAt = LocalDateTime.now().plusSeconds(3600);
     }
 
-    @Override
+    /*@Override
     public String toString() {
         return String.format("""
                 Payment: {
@@ -57,6 +57,6 @@ public class Payment {
                     closedAt: %s
                 }
                 """, id, user.getId(), user.getName(), user.getPassword(), paymentMonth, paymentYear, pixUrl, expiresAt, closedAt);
-    }
+    }*/
 
 }

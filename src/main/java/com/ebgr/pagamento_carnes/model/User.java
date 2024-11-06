@@ -8,6 +8,7 @@ import lombok.Setter;
 
 import java.util.List;
 
+@Setter
 @Getter
 @Entity
 @NoArgsConstructor
@@ -16,14 +17,15 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
     @Column(unique = true)
+    private String login;
     private String name;
     @Setter
     private String password;
 
 
-    public User (String name, String password) {
+    public User (String name, String login, String password) {
+        this.login=login;
         this.name=name;
         this.password=password;
     }

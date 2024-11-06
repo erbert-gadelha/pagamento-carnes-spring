@@ -33,7 +33,7 @@ public class PaymentController {
         model.addAttribute("user", new HashMap<>() {{ put("name", userSession.get("name")); }});
         model.addAttribute("title", "Vizualizar pagamentos");
 
-        User user = userRepository.findUserByName(userSession.get("name")).orElse(null);
+        User user = userRepository.findUserByLogin(userSession.get("name")).orElse(null);
         model.addAttribute("payments", paymentService.createPaymentTable(user));
 
         int closed = 3;
@@ -50,7 +50,7 @@ public class PaymentController {
         if(userSession == null)
             return "redirect:/entrar";
 
-        User user = userRepository.findUserByName(userSession.get("name")).orElse(null);
+        User user = userRepository.findUserByLogin(userSession.get("name")).orElse(null);
         paymentService.createOrGetPayment(user, month, year);
         return "redirect:/pagamentos";
 

@@ -20,7 +20,7 @@ import java.util.List;
 
 @Profile("dev")
 @Component
-public class Runner implements CommandLineRunner {
+public class RunnerDev implements CommandLineRunner {
 
     @Autowired
     private EfiHelper efiHelper;
@@ -45,9 +45,10 @@ public class Runner implements CommandLineRunner {
         repository.save(user1);
         repository.save(user2);*/
 
+
         //User user_ = new User("user", "1234");
-        User eric = new User("Eric", "1234");
-        User erbert = new User("Erbert", "1234");
+        User eric = new User("Eric Rocha", "eric", "1234");
+        User erbert = new User("Erbert Gadelha", "erbert", "1234");
         //userRepository.save(user_);
         userRepository.save(eric);
         userRepository.save(erbert);
@@ -70,7 +71,7 @@ public class Runner implements CommandLineRunner {
     }
 
     private void testPixApi() {
-        efiHelper.consultarListaDeCobrancas();
+        efiHelper.exibirListaDeCobrancas();
         CobrancaImediata.Response cobrancaImediata = efiHelper.criarCobrancaImediata(new DTO_efi.Devedor("70292933479", "Erbert Gadelha"), 0.25f, 3600);
         if(cobrancaImediata != null) {
             GerarQRCode.Response qrCode = efiHelper.criarQrCode(cobrancaImediata);

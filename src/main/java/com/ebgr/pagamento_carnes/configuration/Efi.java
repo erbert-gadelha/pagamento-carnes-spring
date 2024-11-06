@@ -1,7 +1,7 @@
 package com.ebgr.pagamento_carnes.configuration;
 
 import com.ebgr.pagamento_carnes.efi.EfiHelper;
-import com.ebgr.pagamento_carnes.efi.EfiHelperMock;
+import com.ebgr.pagamento_carnes.efi.EfiHelperImpl;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -19,15 +19,18 @@ public class Efi {
     @Getter
     @Value("${efi.url}")
     String url;
-
-    /*@Bean
-    public EfiHelper efiHelperImpl() throws Exception{
-        return new EfiHelperImpl(client_id, client_secret, url);
-    }*/
+    @Value("${efi.base64p12}")
+    private String base64P12;
 
     @Bean
+    public EfiHelper efiHelperImpl() throws Exception {
+        //System.err.println(p12FromBase64);
+        return new EfiHelperImpl(client_id, client_secret, url, base64P12);
+    }
+
+    /*@Bean
     public EfiHelper efiHelperMock() {
         return new EfiHelperMock();
-    }
+    }*/
 
 }

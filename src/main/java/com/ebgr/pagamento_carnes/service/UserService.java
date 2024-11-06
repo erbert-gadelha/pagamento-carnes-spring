@@ -14,12 +14,15 @@ public class UserService {
     @Autowired
     UserRepository repository;
 
-    public boolean tryToLogin(String login, String password) {
-        User user = repository.findUserByName(login).orElse(null);
+    public User tryToLogin(String login, String password) {
+        User user = repository.findUserByLogin(login).orElse(null);
         if(user != null)
-            return user.getPassword().equals(password);
+            if(user.getPassword().equals(password))
+                return user;
+            else
+                return  null;
 
         System.err.printf("Usuário (%s) não encontrado.\n", login);
-        return false;
+        return null;
     }
 }
