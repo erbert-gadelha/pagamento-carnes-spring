@@ -1,5 +1,7 @@
 package com.ebgr.pagamento_carnes.service;
 
+
+import com.ebgr.pagamento_carnes.controller.dto.PaymentsSummary;
 import com.ebgr.pagamento_carnes.efi.EfiHelper;
 import com.ebgr.pagamento_carnes.efi.dto.CobrancaImediata;
 import com.ebgr.pagamento_carnes.efi.dto.DTO_efi;
@@ -38,8 +40,8 @@ public class PaymentService {
     }
 
     private final String [] months = {
-            "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
-            "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"};
+            "janeiro", "fevereiro", "março", "abril", "maio", "junho",
+            "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"};
 
     public Map<String, Object>[] createPaymentTable(User user) {
         List<HashMap<String, Object>> modelList = new ArrayList<>(12);
@@ -101,5 +103,38 @@ public class PaymentService {
         System.out.println(Arrays.toString(modelArray));
 
         return modelArray;
+    }
+
+
+    public PaymentsSummary userPaymentsSummary(User user) {
+        List<Payment> paymentList = paymentRepository.findByUser(user);
+        PaymentsSummary.Info[] info = new PaymentsSummary.Info[12];
+        for(int i = 0; i < 12; i++)
+            info[i] = new PaymentsSummary.Info(i, months[i], null, null);
+
+
+
+
+        int openPayments = 12;
+        for(Payment payment : paymentList) {
+            int lastMonth = payment.getPaymentMonth();
+
+            // IF ALREADY PAID
+            if(payment.getClosedAt() != null) {
+                info[lastMonth] = new PaymentsSummary.Info(lastMonth, months[lastMonth], payment.getClosedAt().toString(), null);
+                openPayments --;
+                continue;
+            }
+
+            String pixUrl = payment.getPixUrl();
+            LocalDateTime expiresAt = payment.getExpiresAt();
+
+            // IF NOT EXPIRED
+            if (pixUrl != null && expiresAt != null && expiresAt.isAfter(LocalDateTime.now()))
+                info[lastMonth] = new PaymentsSummary.Info(lastMonth, months[lastMonth], payment.getClosedAt().toString(), payment.getPixUrl());
+
+        }
+
+        return new PaymentsSummary(info, openPayments, 12-openPayments);
     }
 }

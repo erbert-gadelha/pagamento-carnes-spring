@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.util.List;
 
@@ -13,6 +14,7 @@ import java.util.List;
 @Entity
 @NoArgsConstructor
 @Table(name = "tb_user")
+@ToString
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,14 +32,7 @@ public class User {
         this.password=password;
     }
 
-    @Override
-    public String toString() {
-        return String.format("""
-                User: {
-                    id: %d,
-                    name: %s,
-                    password: %s
-                }
-                """, getId(),getName(), getPassword());
-    }
+    public String getName(){return name;}
+    public String getPassword(){return password;}
+    public void setPassword(String encode) { this.password = encode; }
 }

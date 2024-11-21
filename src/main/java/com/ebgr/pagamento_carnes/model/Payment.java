@@ -40,6 +40,10 @@ public class Payment {
         this.expiresAt = LocalDateTime.now().plusSeconds(3600);
     }
 
+    public LocalDateTime getClosedAt() {return closedAt;}
+
+    public int getPaymentMonth() { return paymentMonth; }
+
     /*@Override
     public String toString() {
         return String.format("""
