@@ -6,8 +6,19 @@ efi:
 spring:
   profiles:
     active: dev
-  mustache:
-    suffix: .mustache
-    prefix: classpath:/templates/
   application:
     name: Pagamento Carnes
+  web:
+    resources:
+      static-locations:
+        - classpath:/static/
+  mvc:
+    favicon:
+      enabled: false
+jwt:
+  token:
+    lifetime: 3600000
+    secret: your-secret-key
+
+
+

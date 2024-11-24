@@ -1,22 +1,14 @@
 package com.ebgr.pagamento_carnes.controller;
 
 import com.ebgr.pagamento_carnes.controller.dto.PaymentsSummary;
-import com.ebgr.pagamento_carnes.efi.dto.DTO_efi;
-import com.ebgr.pagamento_carnes.model.Payment;
-import com.ebgr.pagamento_carnes.model.User;
+import com.ebgr.pagamento_carnes.model.UserModel;
 import com.ebgr.pagamento_carnes.repository.PaymentRepository;
 import com.ebgr.pagamento_carnes.repository.UserRepository;
 import com.ebgr.pagamento_carnes.service.PaymentService;
-import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.*;
 
 @RestController
 public class PaymentController {
@@ -52,7 +44,7 @@ public class PaymentController {
     @GetMapping("api/payments")
     public PaymentsSummary getPayments(/*HttpSession session*/) {
         //HashMap<String, String> userSession = (HashMap<String, String>) session.getAttribute("user");
-        User user = userRepository.findUserByLogin("erbert").orElse(null);
+        UserModel user = userRepository.findUserByLogin("erbert").orElse(null);
 
         PaymentsSummary paymentsSummary = paymentService.userPaymentsSummary(user);
 

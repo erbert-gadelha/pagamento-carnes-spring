@@ -1,6 +1,6 @@
 package com.ebgr.pagamento_carnes.service;
 
-import com.ebgr.pagamento_carnes.model.User;
+import com.ebgr.pagamento_carnes.model.UserModel;
 import com.ebgr.pagamento_carnes.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -23,13 +23,13 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<User> user = repository.findUserByLogin(username);
+        Optional<UserModel> user = repository.findUserByLogin(username);
         if(user.isEmpty())
             throw new UsernameNotFoundException("User not found.");
         return new UserDetailsImpl(user.get());
     }
 
-    public void createUser(User user) {
+    public void createUser(UserModel user) {
         user.setPassword(encoder.encode(user.getPassword()));
         repository.save(user);
     }

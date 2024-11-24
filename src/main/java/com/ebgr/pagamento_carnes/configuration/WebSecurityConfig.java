@@ -1,5 +1,6 @@
 package com.ebgr.pagamento_carnes.configuration;
 
+import com.ebgr.pagamento_carnes.jwt.JwtFilter;
 import com.ebgr.pagamento_carnes.service.UserDetailsServiceImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -27,7 +29,13 @@ import java.util.Arrays;
 @EnableWebSecurity
 public class WebSecurityConfig {
 
-
+    String [] PUBLIC_PATHS = {
+            "/",
+            "/public/*",
+            "/favicon.ico",
+            "/api/logout",
+            "/api/user/authenticate"
+    };
 
     @Autowired
     UserDetailsServiceImpl userDetailsService;
@@ -36,23 +44,16 @@ public class WebSecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http
-                .cors(AbstractHttpConfigurer::disable)
-                .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(authorize -> authorize
-                        /*.requestMatchers("/*").permitAll()
-                        .requestMatchers("/criar").permitAll()
-                        .requestMatchers("/sair").permitAll()
-                        .requestMatchers("/todo").permitAll()
-                        .requestMatchers("/render").permitAll()
-                        .requestMatchers("/api/criar").permitAll()
-                        .anyRequest().authenticated()*/
-                        .anyRequest().permitAll()
-                )
-                //.cors().and().csrf(csrf -> csrf.disable())
-                .formLogin(Customizer.withDefaults())
-                //.httpBasic(withDefaults())
-                .logout(logout -> logout.logoutUrl("/sair").logoutSuccessUrl("/"))
-                .csrf(AbstractHttpConfigurer::disable);
+            .cors(AbstractHttpConfigurer::disable)
+            .csrf(AbstractHttpConfigurer::disable)
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers(PUBLIC_PATHS).permitAll()
+                .anyRequest().authenticated()
+            )
+            .addFilterBefore(
+                new JwtFilter(),
+                UsernamePasswordAuthenticationFilter.class
+            );
 
         return http.build();
     }

@@ -1,14 +1,17 @@
 package com.ebgr.pagamento_carnes.runner;
 
 
+import com.ebgr.pagamento_carnes.controller.dto.UserDTO;
 import com.ebgr.pagamento_carnes.efi.EfiHelper;
 import com.ebgr.pagamento_carnes.efi.dto.DTO_efi;
 import com.ebgr.pagamento_carnes.efi.dto.CobrancaImediata;
 import com.ebgr.pagamento_carnes.efi.dto.GerarQRCode;
-import com.ebgr.pagamento_carnes.model.Payment;
-import com.ebgr.pagamento_carnes.model.User;
+import com.ebgr.pagamento_carnes.jwt.JwtUtil;
+import com.ebgr.pagamento_carnes.model.PaymentModel;
+import com.ebgr.pagamento_carnes.model.UserModel;
 import com.ebgr.pagamento_carnes.repository.PaymentRepository;
 import com.ebgr.pagamento_carnes.repository.UserRepository;
+import com.ebgr.pagamento_carnes.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
@@ -26,9 +29,12 @@ public class RunnerDev implements CommandLineRunner {
     private EfiHelper efiHelper;
 
     @Autowired
+    private UserService userService;
+    @Autowired
     private UserRepository userRepository;
     @Autowired
     private PaymentRepository paymentRepository;
+
 
     @Override
     public void run(String... args) throws Exception {
@@ -36,33 +42,21 @@ public class RunnerDev implements CommandLineRunner {
     }
 
     private void feedRepository() {
-        /*User user1 = new User("user", "1234");
-        User user2 = new User("usuario", "senha");
-        System.out.println(user1);
-        System.out.println(user2);
-        user1.setPassword(encoder.encode(user1.getPassword()));
-        user2.setPassword(encoder.encode(user2.getPassword()));
-        repository.save(user1);
-        repository.save(user2);*/
+
+        userService.create(new UserDTO(null, "eric", "Eric Rocha", "1234"));
+        UserModel erbert = userService.create(new UserDTO(null, "erbert", "Erbert Gadelha", "1234"));
 
 
-        //User user_ = new User("user", "1234");
-        User eric = new User("Eric Rocha", "eric", "1234");
-        User erbert = new User("Erbert Gadelha", "erbert", "1234");
-        //userRepository.save(user_);
-        userRepository.save(eric);
-        userRepository.save(erbert);
-
-        List<User> users = userRepository.findAll();
+        List<UserModel> users = userRepository.findAll();
         users.forEach(user -> System.out.println(user.toString()));
 
 
 
         //for(int i = 0; i < 12; i++)
         for(int i = 0; i < 5; i++) {
-            Payment payment = new Payment(erbert, i, 2024);
-            payment.setClosedAt(LocalDateTime.now());
-            paymentRepository.save(payment);
+            PaymentModel paymentModel = new PaymentModel(erbert, i, 2024);
+            paymentModel.setClosedAt(LocalDateTime.now());
+            paymentRepository.save(paymentModel);
         }
 
 

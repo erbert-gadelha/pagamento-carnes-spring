@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.util.List;
+import java.time.LocalDateTime;
 
 @Setter
 @Getter
@@ -15,18 +15,21 @@ import java.util.List;
 @NoArgsConstructor
 @Table(name = "tb_user")
 @ToString
-public class User {
+public class UserModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @Column(unique = true)
+    @Column(nullable = false, unique = true)
     private String login;
+    @Column(nullable = false)
     private String name;
-    @Setter
+    @Column(nullable = false)
     private String password;
+    @Column(name = "deleted_at")
+    private LocalDateTime deletedAt;
 
 
-    public User (String name, String login, String password) {
+    public UserModel(String name, String login, String password) {
         this.login=login;
         this.name=name;
         this.password=password;
@@ -35,4 +38,10 @@ public class User {
     public String getName(){return name;}
     public String getPassword(){return password;}
     public void setPassword(String encode) { this.password = encode; }
+
+    /*public enum UserRole {
+        ROLE_CUSTOMER,
+        ROLE_ADMINISTRATOR
+    }*/
 }
+

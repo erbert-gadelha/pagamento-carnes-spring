@@ -2,7 +2,7 @@ package com.ebgr.pagamento_carnes.runner;
 
 import com.ebgr.pagamento_carnes.efi.EfiHelper;
 import com.ebgr.pagamento_carnes.efi.dto.DTO_efi;
-import com.ebgr.pagamento_carnes.model.User;
+import com.ebgr.pagamento_carnes.model.UserModel;
 import com.ebgr.pagamento_carnes.repository.PaymentRepository;
 import com.ebgr.pagamento_carnes.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +33,7 @@ public class RunnerPrd implements CommandLineRunner {
     }
 
     private void getUsers() {
-        List<User> users = userRepository.findAll();
+        List<UserModel> users = userRepository.findAll();
         System.out.printf("Users <%d>:\n", users.size());
         users.forEach(System.out::println);
     }

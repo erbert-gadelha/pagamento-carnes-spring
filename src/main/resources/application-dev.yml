@@ -20,7 +20,3 @@ spring:
       settings:
         trace: false
         web-allow-others: false
-  web:
-    resources:
-      static-locations:
-        - classpath:/static/

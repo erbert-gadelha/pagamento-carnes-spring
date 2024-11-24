@@ -1,6 +1,6 @@
 package com.ebgr.pagamento_carnes.service;
 
-import com.ebgr.pagamento_carnes.model.User;
+import com.ebgr.pagamento_carnes.model.UserModel;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -10,9 +10,9 @@ import java.util.List;
 
 public class UserDetailsImpl implements UserDetails {
 
-    private final User user;
+    private final UserModel user;
 
-    public UserDetailsImpl(User user) {
+    public UserDetailsImpl(UserModel user) {
         this.user = user;
     }
 

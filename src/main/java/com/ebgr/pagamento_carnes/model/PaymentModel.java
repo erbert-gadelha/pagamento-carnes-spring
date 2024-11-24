@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Entity
 @Table(name = "tb_payment")
-public class Payment {
+public class PaymentModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -29,10 +29,10 @@ public class Payment {
     private LocalDateTime closedAt;
 
     @ManyToOne
-    User user;
+    UserModel user;
 
 
-    public Payment(User user, int paymentMonth, int paymentYear/*, String pixUrl*/) {
+    public PaymentModel(UserModel user, int paymentMonth, int paymentYear/*, String pixUrl*/) {
         this.user = user;
         this.pixUrl = pixUrl;
         this.paymentYear = paymentYear;
