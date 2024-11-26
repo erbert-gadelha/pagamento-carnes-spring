@@ -29,9 +29,10 @@ public class JwtFilter extends OncePerRequestFilter {
 
 
     private String findCookie(String cookieName, Cookie [] cookies) {
-        for (Cookie cookie : cookies)
-            if(cookieName.equals(cookie.getName()))
-                return cookie.getValue();
+        if(cookies != null)
+            for (Cookie cookie : cookies)
+                if(cookieName.equals(cookie.getName()))
+                    return cookie.getValue();
         return null;
     }
 
