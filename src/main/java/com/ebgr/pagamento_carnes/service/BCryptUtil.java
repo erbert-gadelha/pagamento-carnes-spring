@@ -10,6 +10,7 @@ public class BCryptUtil {
         return BCrypt.checkpw(s1, s2);
     }
     public static String hashpw(String password) {
+        System.out.println("[BCryptUtil]: <salt:" + salt + ">.");
         return BCrypt.hashpw(password, salt);
     }
 }
