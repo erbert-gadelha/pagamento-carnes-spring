@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.repository.cdi.Eager;
 
 import java.time.LocalDateTime;
 
@@ -28,7 +29,7 @@ public class PaymentModel {
     @Setter
     private LocalDateTime closedAt;
 
-    @ManyToOne
+    @ManyToOne//(fetch = FetchType.LAZY)
     UserModel user;
 
 

@@ -1,16 +1,21 @@
 package com.ebgr.pagamento_carnes.controller;
 
+import com.ebgr.pagamento_carnes.controller.dto.PaymentDTO;
 import com.ebgr.pagamento_carnes.controller.dto.PaymentsSummary;
+import com.ebgr.pagamento_carnes.efi.dto.GerarQRCode;
 import com.ebgr.pagamento_carnes.model.UserModel;
 import com.ebgr.pagamento_carnes.repository.PaymentRepository;
 import com.ebgr.pagamento_carnes.repository.UserRepository;
 import com.ebgr.pagamento_carnes.service.PaymentService;
+import com.ebgr.pagamento_carnes.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("/api/payment/")
 public class PaymentController {
 
 
@@ -41,14 +46,27 @@ public class PaymentController {
     }*/
 
     @CrossOrigin
-    @GetMapping("api/payments")
-    public PaymentsSummary getPayments(/*HttpSession session*/) {
-        //HashMap<String, String> userSession = (HashMap<String, String>) session.getAttribute("user");
-        UserModel user = userRepository.findUserByLogin("erbert").orElse(null);
+    @GetMapping("all")
+    public ResponseEntity<Object> getPayments() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return ResponseEntity
+                .ok()
+                .body(
+                    paymentService.
+                            getUserPayments((String) authentication.getPrincipal())
+                );
+    }
+    
+    @PostMapping("create/{month}/{year}")
+    public ResponseEntity<PaymentDTO> createPix(@PathVariable int month, @PathVariable int year) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        PaymentsSummary paymentsSummary = paymentService.userPaymentsSummary(user);
-
-        return paymentsSummary;
+        return ResponseEntity
+                .ok()
+                .body(
+                        paymentService.
+                                createOrGetPayment((String) authentication.getPrincipal(), month, year)
+                );
     }
 
 

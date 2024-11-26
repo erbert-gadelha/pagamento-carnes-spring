@@ -45,11 +45,24 @@ public class UserService {
         }
     }
 
-    public UserModel findUser(String userLogin){
-        UserModel user = userRepository.findUserByLogin(userLogin).orElse(null);
+    public UserModel findUser(String login){
+        UserModel user = userRepository.findUserByLogin(login).orElse(null);
         return sanitizedUser(user);
     }
 
+    public UserModel findUser(Integer id){
+        UserModel user = userRepository.findUserById(id).orElse(null);
+        return sanitizedUser(user);
+    }
+
+
+    public UserModel findUserOrThrow(String login) throws RuntimeException {
+        return userRepository.findUserByLogin(login).orElseThrow(()->new RuntimeException("User not found."));
+    }
+
+    public UserModel findUserOrThrow(Integer id) throws RuntimeException {
+        return userRepository.findUserById(id).orElseThrow(()->new RuntimeException("User not found."));
+    }
 
     @Transactional
     public void softDelete(Authentication auth, String delete) {

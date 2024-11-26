@@ -1,6 +1,7 @@
 package com.ebgr.pagamento_carnes.service;
 
 
+import com.ebgr.pagamento_carnes.controller.dto.PaymentDTO;
 import com.ebgr.pagamento_carnes.controller.dto.PaymentsSummary;
 import com.ebgr.pagamento_carnes.efi.EfiHelper;
 import com.ebgr.pagamento_carnes.efi.dto.CobrancaImediata;
@@ -9,6 +10,7 @@ import com.ebgr.pagamento_carnes.efi.dto.GerarQRCode;
 import com.ebgr.pagamento_carnes.model.PaymentModel;
 import com.ebgr.pagamento_carnes.model.UserModel;
 import com.ebgr.pagamento_carnes.repository.PaymentRepository;
+import com.ebgr.pagamento_carnes.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,28 +23,55 @@ public class PaymentService {
     @Autowired
     PaymentRepository paymentRepository;
     @Autowired
+    UserService userService;
+    @Autowired
     EfiHelper efiHelper;
-
-    public PaymentModel createOrGetPayment(UserModel user, int month, int year) {
-        PaymentModel paymentModel = paymentRepository.findByUserAndPaymentMonthAndPaymentYear(user, year, month).orElse(null);
-        if(paymentModel == null)
-            paymentModel = new PaymentModel(user, month, year);
-        if(paymentModel.getPixUrl() == null || paymentModel.getExpiresAt().isAfter(LocalDateTime.now())) {
-            CobrancaImediata.Response cobrancaImediata =  efiHelper.criarCobrancaImediata(new DTO_efi.Devedor("70292933479", "Erbert"), 2, 3600);
-            GerarQRCode.Response qrCode = efiHelper.criarQrCode(cobrancaImediata);
-            paymentModel.setPixUrl(qrCode.linkVisualizacao());
-            //payment.setPixUrl(cobrancaImediata.pixCopiaECola());
-            paymentModel.setExpiresAt(LocalDateTime.now().plusSeconds(5));
-        }
-
-        paymentRepository.save(paymentModel);
-        return paymentModel;
-    }
-
     private final String [] months = {
             "janeiro", "fevereiro", "março", "abril", "maio", "junho",
             "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"};
 
+    public List<PaymentModel> getUserPayments(String login) {
+        UserModel userModel = userService.findUserOrThrow(login);
+        return paymentRepository.findByUser(userModel);
+    }
+
+    public PaymentDTO createOrGetPayment(String login, int month, int year) {
+
+        UserModel userModel = userService.findUserOrThrow(login);
+        final PaymentModel paymentModel_0 = paymentRepository.findByUserAndPaymentMonthAndPaymentYear(
+                userModel,
+                month,
+                year
+        ).orElse(null);
+
+
+        if(paymentModel_0 != null)
+            if( paymentModel_0.getPixUrl() != null && paymentModel_0.getExpiresAt().isAfter(LocalDateTime.now()))
+                return new PaymentDTO(
+                    paymentModel_0.getPixUrl(),
+                    paymentModel_0.getExpiresAt()
+                );
+            else
+                paymentRepository.delete(paymentModel_0);
+
+
+
+
+        final PaymentModel paymentModel_1 = new PaymentModel(userModel, month, year);
+        CobrancaImediata.Response cobrancaImediata =  efiHelper.criarCobrancaImediata(new DTO_efi.Devedor("70292933479", "Erbert"), 2, 3600);
+        GerarQRCode.Response qrCode = efiHelper.criarQrCode(cobrancaImediata);
+        paymentModel_1.setPixUrl(qrCode.linkVisualizacao());
+        paymentModel_1.setExpiresAt(LocalDateTime.now().plusSeconds(3600));
+        paymentRepository.save(paymentModel_1);
+
+        return new PaymentDTO(
+                paymentModel_1.getPixUrl(),
+                paymentModel_1.getExpiresAt()
+        );
+    }
+
+
+/*
     public Map<String, Object>[] createPaymentTable(UserModel user) {
         List<HashMap<String, Object>> modelList = new ArrayList<>(12);
         //System.out.println(months.length);
@@ -87,8 +116,8 @@ public class PaymentService {
             //paymentRepository.delete(payment);
             //modelArray[lastMonth].put("clickable", "api/create-payment/"+lastMonth+"/2024");
             //someExpired = true;
-            /*expiredMonth = lastMonth;
-            lastMonth--;*/
+            //expiredMonth = lastMonth;
+            //lastMonth--;
         }
 
 
@@ -137,4 +166,6 @@ public class PaymentService {
 
         return new PaymentsSummary(info, openPayments, 12-openPayments);
     }
+*/
+
 }
