@@ -26,10 +26,9 @@ public class RunnerPrd implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         getUsers();
-        var cobranca =  efiHelper.criarCobrancaImediata(new DTO_efi.Devedor("70292933479", "Fulano da Silva"), 0.25, 60);
+        /*var cobranca =  efiHelper.criarCobrancaImediata(new DTO_efi.Devedor("70292933479", "Fulano da Silva"), 0.25, 60);
         var qrCode = efiHelper.criarQrCode(cobranca);
-
-        System.out.println("Link da cobranca: " + qrCode.linkVisualizacao());
+        System.out.println("Link da cobranca: " + qrCode.linkVisualizacao());*/
     }
 
     private void getUsers() {
