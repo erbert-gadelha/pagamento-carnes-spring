@@ -1,15 +1,12 @@
 package com.ebgr.pagamento_carnes.service;
 
-import com.ebgr.pagamento_carnes.configuration.JwtConfig;
 import com.ebgr.pagamento_carnes.controller.dto.UserDTO;
-import com.ebgr.pagamento_carnes.jwt.JwtUtil;
 import com.ebgr.pagamento_carnes.model.UserModel;
 import com.ebgr.pagamento_carnes.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.bcrypt.BCrypt;
+//import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,13 +18,14 @@ public class UserService {
 
     @Autowired
     UserRepository userRepository;
-
-
     private final int deletedUser_lifeDays = 30;
+
+
+
 
     public UserModel authenticate(UserDTO userDTO) {
         UserModel user = userRepository.findActiveUserByLogin(userDTO.login()).orElse(null);
-        if(user != null && BCrypt.checkpw(userDTO.password(), user.getPassword()))
+        if(user != null && BCryptUtil.checkpw(userDTO.password(), user.getPassword()))
             return sanitizedUser(user);
         throw new RuntimeException("Bad credentials.");
     }
@@ -36,7 +34,8 @@ public class UserService {
         if(!validateDTO(userDTO))
             return null;
 
-        String hashed_pw = BCrypt.hashpw(userDTO.password(), BCrypt.gensalt());
+
+        String hashed_pw = BCryptUtil.hashpw(userDTO.password());
         UserModel user = new UserModel(userDTO.name(), userDTO.login(), hashed_pw);
 
         try {

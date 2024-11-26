@@ -31,9 +31,12 @@ public class WebSecurityConfig {
 
     String [] PUBLIC_PATHS = {
             "/",
+            "/me",
+            "/status",
             "/public/*",
             "/favicon.ico",
             "/api/logout",
+            "/api/user/create",
             "/api/user/authenticate"
     };
 

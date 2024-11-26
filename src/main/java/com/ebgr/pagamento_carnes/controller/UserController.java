@@ -69,9 +69,7 @@ public class UserController {
     public ResponseEntity<UserModel> about_me() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String login = (String) authentication.getPrincipal();
-
         UserModel user = userService.findUser(login);
-
         return ResponseEntity.status(200).body(user);
     }
 

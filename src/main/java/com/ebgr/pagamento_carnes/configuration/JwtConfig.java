@@ -6,16 +6,16 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 
-@Configuration
+//@Configuration
 public class JwtConfig {
-
+/*
     @Value("${jwt.token.lifetime}")
     private long tokenLifeTime;
 
     @Value("${jwt.token.secret}")
     private String SECRET;
 
-    /*@Bean
+    @Bean
     public JwtUtil jwtUtil () {
         return new JwtUtil(SECRET, tokenLifeTime);
     }*/

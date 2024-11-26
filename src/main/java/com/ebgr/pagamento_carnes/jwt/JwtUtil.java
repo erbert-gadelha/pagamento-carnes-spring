@@ -8,25 +8,29 @@ import com.auth0.jwt.interfaces.JWTVerifier;
 import com.ebgr.pagamento_carnes.controller.dto.TokenDTO;
 import com.ebgr.pagamento_carnes.model.UserModel;
 import java.util.Date;
+import java.util.List;
 
 public class JwtUtil {
 
-    private static final long tokenLifeTimeMilli = 3_600_000;
-    private static final int tokenLifeTimeSeconds = 3_600;
-    private static final String secret = "my-secret";
+    private static long tokenLifeTimeMilli = 3_600_000;
+    private static int tokenLifeTimeSeconds = 3_600;
+    private static String secret = "40028922";
+    private static Algorithm algorithm = Algorithm.HMAC256(secret);
 
 
 
     public static TokenDTO generateToken(UserModel userModel) {
 
         Date issuedAt = new Date();
-        Date expiresAt = new Date(System.currentTimeMillis() + tokenLifeTimeMilli);
+        Date expiresAt = new Date(issuedAt.getTime() + tokenLifeTimeMilli);
 
         String token = JWT.create()
                 .withSubject(userModel.getLogin())
+                .withClaim("roles", List.of("COMMON"))//userModel.getRole())
+                .withClaim("userId", userModel.getId())
                 .withIssuedAt(issuedAt)
                 .withExpiresAt(expiresAt)
-                .sign(Algorithm.HMAC256(secret));
+                .sign(algorithm);
 
         return new TokenDTO(
                 token,
@@ -40,11 +44,18 @@ public class JwtUtil {
         try {
             Algorithm algorithm = Algorithm.HMAC256(secret);
             JWTVerifier verifier = JWT.require(algorithm).build();
-            DecodedJWT decodedJWT = verifier.verify(token);
-            return decodedJWT.getSubject();
+            return verifier.verify(token).getSubject();
         } catch (JWTVerificationException e) {
             return null;
-            //throw new RuntimeException("Invalid Token");
+        }
+    }
+
+    public static DecodedJWT verifyToken(String token) {
+        try {
+            JWTVerifier verifier = JWT.require(algorithm).build();
+            return verifier.verify(token);
+        } catch (JWTVerificationException e) {
+            return null;
         }
     }
 }
