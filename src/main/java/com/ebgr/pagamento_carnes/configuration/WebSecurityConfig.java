@@ -72,6 +72,7 @@ public class WebSecurityConfig {
                 .allowedMethods("*")
                 .allowedOrigins(
                     "http://localhost:4200",
+                    "https://localhost:4200",
                     "https://erbert-gadelha.github.io",
                     "https://pagamento-carnes-production.up.railway.app"
                 )
