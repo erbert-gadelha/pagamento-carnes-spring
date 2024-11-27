@@ -28,21 +28,21 @@ public class UserController {
         UserModel user = userService.authenticate(userDTO);
         TokenDTO token = JwtUtil.generateToken(user);
         return ResponseEntity
-                .status(202)
-                .header("Authorization", "Bearer " + token.token())
-                .header("Set-Cookie", "accessToken="+token.token()+"; HttpOnly; SameSite=Strict; Path=/; Max-Age="+token.maxAge())
-                .body("Successfully logged as ("+user.getLogin()+").");
+            .status(202)
+            .header("Authorization", "Bearer " + token.value())
+            .header("Set-Cookie", JwtUtil.generateCookie(token))
+            .body("Successfully logged as ("+user.getLogin()+").");
     }
 
 
 
     @PostMapping("/api/logout")
     private ResponseEntity<String> logout () {
+        String logoutCookie = JwtUtil.generateCookie(null);
         return ResponseEntity
-                .status(200)
-                //.header("Authorization", "").header("Set-Cookie", "accessToken=; SameSite=None; HttpOnly; Path=/; Max-Age=0; Expires=Thu, 01 Jan 1970 00:00:00 GMT")
-                .header("Set-Cookie", "accessToken=; HttpOnly; SameSite=Strict; Path=/; Max-Age=0;")
-                .body("Cookie destroyed successfully.");
+            .status(200)
+            .header("Set-Cookie", logoutCookie)
+            .body("Cookie destroyed successfully.");
     }
     @GetMapping("/api/logout")
     public ResponseEntity<String> logout_get() { return logout(); }

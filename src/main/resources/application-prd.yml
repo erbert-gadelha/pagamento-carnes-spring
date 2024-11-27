@@ -1,3 +1,6 @@
+application:
+  domain: pagamento-carnes-production.up.railway.app
+
 spring:
   datasource:
     platform: postgres

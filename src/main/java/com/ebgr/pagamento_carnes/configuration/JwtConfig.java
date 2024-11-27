@@ -9,10 +9,10 @@ import org.springframework.context.annotation.Configuration;
 //@Configuration
 public class JwtConfig {
 /*
-    @Value("${jwt.token.lifetime}")
+    @Value("${jwt.value.lifetime}")
     private long tokenLifeTime;
 
-    @Value("${jwt.token.secret}")
+    @Value("${jwt.value.secret}")
     private String SECRET;
 
     @Bean

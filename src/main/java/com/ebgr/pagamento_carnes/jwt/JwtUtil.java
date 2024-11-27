@@ -18,9 +18,11 @@ public class JwtUtil {
     private static Algorithm algorithm = Algorithm.HMAC256(secret);
 
 
+    public static String domain = "";
+
+
 
     public static TokenDTO generateToken(UserModel userModel) {
-
         Date issuedAt = new Date();
         Date expiresAt = new Date(issuedAt.getTime() + tokenLifeTimeMilli);
 
@@ -39,6 +41,15 @@ public class JwtUtil {
                 tokenLifeTimeSeconds
         );
     }
+
+    public static String generateCookie(TokenDTO token) {
+        if(token==null)
+            return "accessToken=; HttpOnly; SameSite=Strict; Secure; Path=/; Max-Age=0; Domain="+domain+";";
+        return "accessToken="+token.value()+"; HttpOnly; SameSite=Strict; Secure; Path=/; Max-Age="+token.maxAge()+"; Domain="+domain+";";
+    }
+
+
+
 
     public static String validateToken(String token) throws RuntimeException {
         try {

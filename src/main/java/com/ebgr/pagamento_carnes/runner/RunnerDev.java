@@ -13,6 +13,7 @@ import com.ebgr.pagamento_carnes.repository.PaymentRepository;
 import com.ebgr.pagamento_carnes.repository.UserRepository;
 import com.ebgr.pagamento_carnes.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
@@ -36,8 +37,12 @@ public class RunnerDev implements CommandLineRunner {
     private PaymentRepository paymentRepository;
 
 
+    @Value("${app.domain:}")
+    String appDomain;
+
     @Override
     public void run(String... args) throws Exception {
+        JwtUtil.domain = appDomain;
         feedRepository();
     }
 

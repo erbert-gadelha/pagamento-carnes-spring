@@ -89,7 +89,7 @@ public class EfiHelperImpl implements EfiHelper {
     private void authenticate() throws Exception {
 
         try {
-            HttpPost request = new HttpPost(url + "/oauth/token");
+            HttpPost request = new HttpPost(url + "/oauth/value");
 
             // Credenciais codificadas em Base64
             String auth = client_id + ":" + client_secret;

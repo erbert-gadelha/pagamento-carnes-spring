@@ -2,10 +2,12 @@ package com.ebgr.pagamento_carnes.runner;
 
 import com.ebgr.pagamento_carnes.efi.EfiHelper;
 import com.ebgr.pagamento_carnes.efi.dto.DTO_efi;
+import com.ebgr.pagamento_carnes.jwt.JwtUtil;
 import com.ebgr.pagamento_carnes.model.UserModel;
 import com.ebgr.pagamento_carnes.repository.PaymentRepository;
 import com.ebgr.pagamento_carnes.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
@@ -23,8 +25,13 @@ public class RunnerPrd implements CommandLineRunner {
     @Autowired
     private PaymentRepository paymentRepository;
 
+
+    @Value("${app.domain:}")
+    String appDomain;
+
     @Override
     public void run(String... args) throws Exception {
+        JwtUtil.domain = appDomain;
         getUsers();
         /*var cobranca =  efiHelper.criarCobrancaImediata(new DTO_efi.Devedor("70292933479", "Fulano da Silva"), 0.25, 60);
         var qrCode = efiHelper.criarQrCode(cobranca);
