@@ -47,9 +47,19 @@ public class JwtUtil {
     }
 
     public static String generateCookie(TokenDTO token) {
+
+        /*Cookie cookie = new Cookie("accessToken", yourToken);
+        cookie.setHttpOnly(true);
+        cookie.setSecure(true); // Requer HTTPS
+        cookie.setPath("/");
+        cookie.setMaxAge(3600); // 1 hora
+        cookie.setSameSite("None");
+        response.addCookie(cookie);*/
+
+
         if(token==null)
-            return "accessToken=; HttpOnly; SameSite=Strict; Secure; Path=/; Max-Age=0; Domain="+domain+";";
-        return "accessToken="+token.value()+"; HttpOnly; SameSite=Strict; Secure; Path=/; Max-Age="+token.maxAge()+"; Domain="+domain+";";
+            return "accessToken=; HttpOnly; SameSite=None; Secure; Path=/; Max-Age=0; Domain="+domain+";";
+        return "accessToken="+token.value()+"; HttpOnly; SameSite=None; Secure; Path=/; Max-Age="+token.maxAge()+"; Domain="+domain+";";
     }
 
 
