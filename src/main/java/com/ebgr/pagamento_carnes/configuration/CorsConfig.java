@@ -16,7 +16,10 @@ public class CorsConfig {
     public CorsFilter corsFilter() {
         CorsConfiguration config = new CorsConfiguration();
         config.addAllowedOrigin("http://localhost:4200");
+        config.addAllowedOrigin("https://erbert-gadelha.github.io/pagamento-carnes-angular");
+        config.addAllowedOrigin("https://erbert-gadelha.github.io/pagamento-carnes-angular/");
         config.addAllowedOrigin("https://pagamento-carnes-production.up.railway.app");
+
         config.setAllowCredentials(true);
         config.addAllowedMethod("*");
         config.addAllowedHeader("*");
