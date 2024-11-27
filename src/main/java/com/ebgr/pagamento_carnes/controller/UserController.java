@@ -71,8 +71,6 @@ public class UserController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String login = (String) authentication.getPrincipal();
 
-        //authentication.getAuthorities().forEach( System.out::println );
-
         UserModel user = userService.findUser(login);
         return ResponseEntity.status(200).body(user);
     }

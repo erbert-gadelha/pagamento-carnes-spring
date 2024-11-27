@@ -37,12 +37,12 @@ public class RunnerDev implements CommandLineRunner {
     private PaymentRepository paymentRepository;
 
 
-    @Value("${app.domain:}")
+    @Value("${application.domain:}")
     String appDomain;
 
     @Override
     public void run(String... args) throws Exception {
-        JwtUtil.domain = appDomain;
+        JwtUtil.setDomain(appDomain);
         feedRepository();
     }
 

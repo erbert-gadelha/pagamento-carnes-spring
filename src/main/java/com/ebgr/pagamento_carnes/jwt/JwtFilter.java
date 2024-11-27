@@ -61,8 +61,6 @@ public class JwtFilter extends OncePerRequestFilter {
         else
             token = findCookie("accessToken", request.getCookies());
 
-        System.out.println("acessToken: " + token);
-
         if(token != null) {
             DecodedJWT decodedJWT = JwtUtil.verifyToken(token);
 

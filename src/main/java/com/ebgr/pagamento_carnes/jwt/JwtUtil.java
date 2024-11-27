@@ -18,8 +18,12 @@ public class JwtUtil {
     private static Algorithm algorithm = Algorithm.HMAC256(secret);
 
 
-    public static String domain = "";
 
+    private static String domain = "";
+    public static void setDomain(String domain) {
+        System.out.println("Domain defined as ("+domain+").");
+        JwtUtil.domain = domain;
+    }
 
 
     public static TokenDTO generateToken(UserModel userModel) {

@@ -63,14 +63,19 @@ public class WebSecurityConfig {
 
 
 
-    // Configura CORS para aceitar de qualquer origem
     @Bean
     public WebMvcConfigurer corsConfigurer() {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**").allowedMethods("GET", "POST", "PUT", "DELETE").allowedOrigins("*")
-                        .allowedHeaders("*");
+            registry.addMapping("/**")
+                .allowedMethods("*")
+                .allowedOrigins(
+                    "http://localhost:4200",
+                    "https://erbert-gadelha.github.io",
+                    "https://pagamento-carnes-production.up.railway.app"
+                )
+                .allowedHeaders("*");
             }
         };
     }

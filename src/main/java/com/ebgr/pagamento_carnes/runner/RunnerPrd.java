@@ -26,12 +26,12 @@ public class RunnerPrd implements CommandLineRunner {
     private PaymentRepository paymentRepository;
 
 
-    @Value("${app.domain:}")
+    @Value("${application.domain:}")
     String appDomain;
 
     @Override
     public void run(String... args) throws Exception {
-        JwtUtil.domain = appDomain;
+        JwtUtil.setDomain(appDomain);
         getUsers();
         /*var cobranca =  efiHelper.criarCobrancaImediata(new DTO_efi.Devedor("70292933479", "Fulano da Silva"), 0.25, 60);
         var qrCode = efiHelper.criarQrCode(cobranca);
