@@ -40,7 +40,7 @@ public class UserController {
     private ResponseEntity<String> logout () {
         return ResponseEntity
                 .status(200)
-                .header("Authorization", "").header("Set-Cookie", "accessToken=; HttpOnly; Path=/; Max-Age=0; Expires=Thu, 01 Jan 1970 00:00:00 GMT")
+                .header("Authorization", "").header("Set-Cookie", "accessToken=; SameSite=None; HttpOnly; Path=/; Max-Age=0; Expires=Thu, 01 Jan 1970 00:00:00 GMT")
                 .body("Cookie destroyed successfully.");
     }
     @GetMapping("/api/logout")
