@@ -2,6 +2,7 @@ package com.ebgr.pagamento_carnes.service;
 
 
 import com.ebgr.pagamento_carnes.controller.dto.PaymentDTO;
+import com.ebgr.pagamento_carnes.controller.dto.PaymentMonthDTO;
 import com.ebgr.pagamento_carnes.controller.dto.PaymentsSummary;
 import com.ebgr.pagamento_carnes.efi.EfiHelper;
 import com.ebgr.pagamento_carnes.efi.dto.CobrancaImediata;
@@ -30,9 +31,11 @@ public class PaymentService {
             "janeiro", "fevereiro", "março", "abril", "maio", "junho",
             "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"};
 
-    public List<PaymentModel> getUserPayments(String login) {
+    public List<PaymentMonthDTO> getUserPayments(String login) {
         UserModel userModel = userService.findUserOrThrow(login);
-        return paymentRepository.findByUser(userModel);
+        List<PaymentModel> paymentModels = paymentRepository.findByUser(userModel);
+
+        return paymentModels.stream().map(PaymentModel::serialize).toList();
     }
 
     public PaymentDTO createOrGetPayment(String login, int month, int year) {

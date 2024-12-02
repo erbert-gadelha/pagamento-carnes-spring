@@ -1,5 +1,7 @@
 package com.ebgr.pagamento_carnes.model;
 
+import com.ebgr.pagamento_carnes.controller.dto.PaymentDTO;
+import com.ebgr.pagamento_carnes.controller.dto.PaymentMonthDTO;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,10 +28,11 @@ public class PaymentModel {
     private String pixUrl;
     @Setter
     private LocalDateTime expiresAt;
+    @Getter
     @Setter
     private LocalDateTime closedAt;
 
-    @ManyToOne//(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     UserModel user;
 
 
@@ -41,10 +44,18 @@ public class PaymentModel {
         this.expiresAt = LocalDateTime.now().plusSeconds(3600);
     }
 
-    public LocalDateTime getClosedAt() {return closedAt;}
-
     public int getPaymentMonth() { return paymentMonth; }
 
+
+    public PaymentMonthDTO serialize() {
+        PaymentMonthDTO dto = new PaymentMonthDTO(
+                this.paymentMonth,
+                this.paymentYear,
+                this.closedAt,
+                this.pixUrl
+        );
+        return dto;
+    }
     /*@Override
     public String toString() {
         return String.format("""
