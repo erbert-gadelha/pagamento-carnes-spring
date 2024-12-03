@@ -61,7 +61,7 @@ public class PaymentService {
 
 
         final PaymentModel paymentModel_1 = new PaymentModel(userModel, month, year);
-        CobrancaImediata.Response cobrancaImediata =  efiHelper.criarCobrancaImediata(new DTO_efi.Devedor("70292933479", "Erbert"), 2, 3600);
+        CobrancaImediata.Response cobrancaImediata =  efiHelper.criarCobrancaImediata(new DTO_efi.Devedor("70292933479", "Erbert"), 2);
         GerarQRCode.Response qrCode = efiHelper.criarQrCode(cobrancaImediata);
         paymentModel_1.setPixUrl(qrCode.linkVisualizacao());
         paymentModel_1.setExpiresAt(LocalDateTime.now().plusSeconds(3600));

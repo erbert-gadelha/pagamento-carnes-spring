@@ -77,7 +77,7 @@ public class EfiHelperMock implements EfiHelper {
     }
 
     @Override
-    public CobrancaImediata.Response criarCobrancaImediata(DTO_efi.Devedor devedor, double valor, int expiraEm) {
+    public CobrancaImediata.Response criarCobrancaImediata(DTO_efi.Devedor devedor, double valor) {
         return new CobrancaImediata.Response(
                 new DTO_efi.Calendario("2024-10-23T17:10:09.564Z", 3600),
                 "1e5c5b8fd6a84e7eb3dafe5f08804596",

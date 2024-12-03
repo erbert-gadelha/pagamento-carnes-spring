@@ -39,6 +39,8 @@ public class EfiHelperImpl implements EfiHelper {
     private final String client_secret;
     private final String url;
     private String acessToken;
+    private final int pixLifetime;
+
 
     private LocalDateTime expirationTime = LocalDateTime.MIN;
 
@@ -46,11 +48,12 @@ public class EfiHelperImpl implements EfiHelper {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
 
-
-    public EfiHelperImpl (String client_id, String client_secret, String url, String base64P12) throws Exception {
+    public EfiHelperImpl (String client_id, String client_secret, String url, String base64P12, int pixLifetime) throws Exception {
         this.client_id = client_id;
         this.client_secret = client_secret;
         this.url = url;
+        this.pixLifetime = pixLifetime;
+
 
         KeyStore keyStore = KeyStore.getInstance("PKCS12");
         byte[] decodedBytes = Base64.getDecoder().decode(base64P12);
@@ -187,9 +190,9 @@ public class EfiHelperImpl implements EfiHelper {
     }
 
     @Override
-    public CobrancaImediata.Response criarCobrancaImediata (DTO_efi.Devedor devedor, double valor, int expiraEm) {
+    public CobrancaImediata.Response criarCobrancaImediata (DTO_efi.Devedor devedor, double valor) {
         CobrancaImediata.Request cobrancaImediata = new CobrancaImediata.Request(
-                new DTO_efi.CalendarioSemCriacao(expiraEm),
+                new DTO_efi.CalendarioSemCriacao(this.pixLifetime),
                 devedor,
                 new DTO_efi.Valor (String.format("%.2f", valor)),
                 "48c34d56-f0f7-44e8-bf0d-07e242ef98e7",
