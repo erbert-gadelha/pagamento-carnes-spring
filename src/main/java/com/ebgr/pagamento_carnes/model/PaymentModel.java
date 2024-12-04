@@ -6,10 +6,14 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import org.springframework.data.repository.cdi.Eager;
 
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.util.Random;
 
+@ToString
 @Getter
 @NoArgsConstructor
 @Entity
@@ -24,11 +28,11 @@ public class PaymentModel {
     @Column(name="payment_year")
     private Integer paymentYear;
 
+    private String txid;
     @Setter
     private String pixUrl;
     @Setter
     private LocalDateTime expiresAt;
-    @Getter
     @Setter
     private LocalDateTime closedAt;
 
@@ -36,12 +40,12 @@ public class PaymentModel {
     UserModel user;
 
 
-    public PaymentModel(UserModel user, int paymentMonth, int paymentYear/*, String pixUrl*/) {
+    public PaymentModel(UserModel user, int paymentMonth, int paymentYear) {
         this.user = user;
-        this.pixUrl = pixUrl;
         this.paymentYear = paymentYear;
         this.paymentMonth = paymentMonth;
-        this.expiresAt = LocalDateTime.now().plusSeconds(3600);
+        this.expiresAt = null;
+        this.txid = generate_txid();
     }
 
     public int getPaymentMonth() { return paymentMonth; }
@@ -56,6 +60,14 @@ public class PaymentModel {
         );
         return dto;
     }
+
+
+
+    private static Random random= new Random();
+    private static String generate_txid() {
+        return (LocalDateTime.now().toEpochSecond(ZoneOffset.ofHours(0)) + "_" + random.nextInt(0, 2_147_483_647));
+    }
+
     /*@Override
     public String toString() {
         return String.format("""
