@@ -1,6 +1,7 @@
 package com.ebgr.pagamento_carnes.controller;
 
 import com.ebgr.pagamento_carnes.controller.dto.PaymentDTO;
+import com.ebgr.pagamento_carnes.controller.dto.PaymentMonthDTO;
 import com.ebgr.pagamento_carnes.controller.dto.PaymentsSummary;
 import com.ebgr.pagamento_carnes.efi.dto.GerarQRCode;
 import com.ebgr.pagamento_carnes.model.UserModel;
@@ -14,6 +15,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/payment/")
 public class PaymentController {
@@ -25,25 +28,6 @@ public class PaymentController {
     PaymentService paymentService;
     @Autowired
     UserRepository userRepository;
-
-    /*@CrossOrigin(origins = "http://localhost:4200")
-    @GetMapping("/pagamentos")
-    public String payments(Model model, HttpSession session) {
-        HashMap<String, String> userSession = (HashMap<String, String>) session.getAttribute("user");
-        if(userSession == null)
-            return "redirect:/entrar";
-        model.addAttribute("user", new HashMap<>() {{ put("name", userSession.get("name")); }});
-        model.addAttribute("title", "Vizualizar pagamentos");
-
-        User user = userRepository.findUserByLogin(userSession.get("name")).orElse(null);
-        model.addAttribute("payments", paymentService.createPaymentTable(user));
-
-        int closed = 3;
-        model.addAttribute("closed_payments", closed);
-        model.addAttribute("remaining_payments", 12 - closed);
-
-        return "payments";
-    }*/
 
     @CrossOrigin
     @GetMapping("all")
@@ -58,7 +42,7 @@ public class PaymentController {
     }
     
     @PostMapping("create/{month}/{year}")
-    public ResponseEntity<PaymentDTO> createPix(@PathVariable int month, @PathVariable int year) {
+    public ResponseEntity<PaymentMonthDTO> createPix(@PathVariable int month, @PathVariable int year) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         return ResponseEntity
@@ -69,16 +53,21 @@ public class PaymentController {
                 );
     }
 
+    @PostMapping("webhook")
+    public ResponseEntity<String> efiHandShake(@PathVariable int txid) {
+        return ResponseEntity.ok().body(null);
+    }
 
-    /*@GetMapping("api/create-payment/{month}/{year}")
-    public String createPix(@PathVariable int month, @PathVariable int year, HttpSession session) {
-        HashMap<String, String> userSession = (HashMap<String, String>) session.getAttribute("user");
-        if(userSession == null)
-            return "redirect:/entrar";
+    @PostMapping("webhook/{txid}")
+    public ResponseEntity<String> efiWebHook(@PathVariable int txid, @RequestBody Map<String, Object> body) {
 
-        User user = userRepository.findUserByLogin(userSession.get("name")).orElse(null);
-        paymentService.createOrGetPayment(user, month, year);
-        return "redirect:/pagamentos";
-    }*/
+        System.err.println("webhook foi requisitada.");
+        System.err.println("body <" + body.size() + ">");
+        for ( String key : body.keySet() )
+            System.out.println(key + ":" + body.get(key));
+
+        return ResponseEntity.ok().body(null);
+    }
+
 
 }

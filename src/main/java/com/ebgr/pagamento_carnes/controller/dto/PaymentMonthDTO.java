@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 public record PaymentMonthDTO(
         int month,
         int year,
+        LocalDateTime expiresAt,
         LocalDateTime closedAt,
         String pixUrl
 ) {
