@@ -3,6 +3,7 @@ package com.ebgr.pagamento_carnes.controller;
 import com.ebgr.pagamento_carnes.controller.dto.PaymentDTO;
 import com.ebgr.pagamento_carnes.controller.dto.PaymentMonthDTO;
 import com.ebgr.pagamento_carnes.controller.dto.PaymentsSummary;
+import com.ebgr.pagamento_carnes.efi.EfiHelper;
 import com.ebgr.pagamento_carnes.efi.dto.GerarQRCode;
 import com.ebgr.pagamento_carnes.model.UserModel;
 import com.ebgr.pagamento_carnes.repository.PaymentRepository;
@@ -69,5 +70,14 @@ public class PaymentController {
         return ResponseEntity.ok().body(null);
     }
 
+
+    @Autowired
+    EfiHelper efiHelper;
+
+    @GetMapping("webhooks")
+    public ResponseEntity<String> getEfiWebHooks() {
+        efiHelper.imprimirWebhooks();
+        return ResponseEntity.ok().body(null);
+    }
 
 }

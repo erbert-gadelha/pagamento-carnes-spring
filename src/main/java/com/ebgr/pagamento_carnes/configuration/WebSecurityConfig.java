@@ -34,7 +34,9 @@ public class WebSecurityConfig {
             "/favicon.ico",
             "/api/logout",
             "/api/user/create",
-            "/api/user/authenticate"
+            "/api/user/authenticate",
+            "/api/payment/webhook",
+            "/api/payment/webhook/*",
     };
 
     @Autowired
