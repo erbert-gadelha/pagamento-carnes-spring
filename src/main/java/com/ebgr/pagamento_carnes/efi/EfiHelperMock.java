@@ -4,7 +4,17 @@ import com.ebgr.pagamento_carnes.efi.dto.CobrancaImediata;
 import com.ebgr.pagamento_carnes.efi.dto.DTO_efi;
 import com.ebgr.pagamento_carnes.efi.dto.GerarQRCode;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 public class EfiHelperMock implements EfiHelper {
+
+    private final int pixLifetime;
+    public EfiHelperMock (int pixLifetime) {
+        this.pixLifetime = pixLifetime;
+        System.out.printf("* * * *\n* EFI [MOCK]:\n*\tpixLifetime - %d\n* * * *\n", pixLifetime);
+    }
+
     @Override
     public void exibirListaDeCobrancas() {
         System.out.println("""
@@ -77,9 +87,9 @@ public class EfiHelperMock implements EfiHelper {
     }
 
     @Override
-    public CobrancaImediata.Response criarCobrancaImediata(DTO_efi.Devedor devedor, double valor) {
+    public CobrancaImediata.Response criarCobrancaImediata(DTO_efi.Devedor devedor, double valor, String txid) {
         return new CobrancaImediata.Response(
-                new DTO_efi.Calendario("2024-10-23T17:10:09.564Z", 3600),
+                new DTO_efi.Calendario(LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME), this.pixLifetime),
                 "1e5c5b8fd6a84e7eb3dafe5f08804596",
                 "0",
                 "ATIVA",

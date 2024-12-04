@@ -7,6 +7,6 @@ import com.ebgr.pagamento_carnes.efi.dto.GerarQRCode;
 public interface EfiHelper {
 
     public void exibirListaDeCobrancas();
-    public CobrancaImediata.Response criarCobrancaImediata (DTO_efi.Devedor devedor, double valor);
+    public CobrancaImediata.Response criarCobrancaImediata (DTO_efi.Devedor devedor, double valor, String txid);
     public GerarQRCode.Response criarQrCode (CobrancaImediata.Response cobrancaImediata);
 }

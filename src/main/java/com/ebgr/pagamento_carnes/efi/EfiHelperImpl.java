@@ -25,13 +25,10 @@ import java.security.cert.X509Certificate;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.List;
+import java.util.*;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.Map;
 
 public class EfiHelperImpl implements EfiHelper {
 
@@ -53,6 +50,8 @@ public class EfiHelperImpl implements EfiHelper {
         this.client_secret = client_secret;
         this.url = url;
         this.pixLifetime = pixLifetime;
+
+        System.out.printf("*\n*\n* EFI [IMPL]:\n*\turl - %s\n*\tpixLifetime - %d\n*\n*\n", url, pixLifetime);
 
 
         KeyStore keyStore = KeyStore.getInstance("PKCS12");
@@ -171,6 +170,7 @@ public class EfiHelperImpl implements EfiHelper {
         return request;
     }
 
+
     @Override
     public void exibirListaDeCobrancas() {
         tryAuthenticate();
@@ -189,8 +189,10 @@ public class EfiHelperImpl implements EfiHelper {
         }
     }
 
+
+
     @Override
-    public CobrancaImediata.Response criarCobrancaImediata (DTO_efi.Devedor devedor, double valor) {
+    public CobrancaImediata.Response criarCobrancaImediata (DTO_efi.Devedor devedor, double valor, String txid) {
         CobrancaImediata.Request cobrancaImediata = new CobrancaImediata.Request(
                 new DTO_efi.CalendarioSemCriacao(this.pixLifetime),
                 devedor,
@@ -204,7 +206,7 @@ public class EfiHelperImpl implements EfiHelper {
         tryAuthenticate();
         ClassicHttpRequest request = createHttpsRequest(
                 Method.POST,
-                "/v2/cob",
+                "/v2/cob/"+txid,
                 objectToJson(cobrancaImediata));
 
         try (CloseableHttpResponse response = httpClient.execute(request)) {
