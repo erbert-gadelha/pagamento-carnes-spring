@@ -9,6 +9,7 @@ import java.time.format.DateTimeFormatter;
 
 public class EfiHelperMock implements EfiHelper {
 
+    public void imprimirWebhooks(){}
     private final int pixLifetime;
     public EfiHelperMock (int pixLifetime) {
         this.pixLifetime = pixLifetime;

@@ -160,12 +160,15 @@ public class EfiHelperImpl implements EfiHelper {
     private ClassicHttpRequest createHttpsRequest(Method method, String query, String body) {
 
         System.out.println("createHttpsRequest (" + url + query + ").");
+        System.out.println("body (" + body + ").");
+
 
         ClassicHttpRequest request = ClassicRequestBuilder
                 .create(method.name())
                 .setUri(url + query)
                 .setHeader("Authorization", "Bearer " + acessToken)
                 .setHeader("Content-Type", "application/x-www-form-urlencoded")
+                .setHeader("x-skip-mtls-checking", String.valueOf(true))
                 .build();
 
         if (method == Method.POST || method == Method.PUT) {
@@ -177,15 +180,44 @@ public class EfiHelperImpl implements EfiHelper {
     }
 
     @Override
+    public void imprimirWebhooks() {
+        tryAuthenticate();
+
+        ClassicHttpRequest request = createHttpsRequest(
+                Method.GET,
+                "/v2/webhook/?inicio=2020-10-22T16:01:35Z&fim=2025-10-23T16:01:35Z",
+                null
+        );
+
+
+        try (CloseableHttpResponse response = httpClient.execute(request)) {
+            int statusCode = response.getCode();
+            String responseString = EntityUtils.toString(response.getEntity(), "UTF-8");
+
+
+            System.out.printf("imprimirWebhooks: (%d) %s.\n", statusCode, responseString);
+
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
     public void criarWebhook(final String txid) {
         tryAuthenticate();
 
-        String webhookUrl = String.format("/api/payment/%s", txid );
+
+
+        CriarWebhook.Request requestBody = new CriarWebhook.Request(
+                //String.format("%s/api/payment/%s",applicationDomain, txid)
+                String.format("https://pagamento-carnes-production.up.railway.app/api/payment/%s", txid)
+        );
 
         ClassicHttpRequest request = createHttpsRequest(
                 Method.PUT,
-                "/v2/webhook/"+txid,
-                String.valueOf(new CriarWebhook.Request(webhookUrl))
+                "/v2/webhook/48c34d56-f0f7-44e8-bf0d-07e242ef98e7"/*+txid*/,
+                objectToJson(requestBody)
         );
 
 
