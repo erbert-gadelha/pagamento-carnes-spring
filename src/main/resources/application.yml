@@ -1,5 +1,5 @@
 application:
-  domain: ${APPLICATION_DOMAIN:""}
+  domain: ${APPLICATION_DOMAIN:localhost}
 efi:
   client_id: ${EFI_CLIENT_ID:}
   client_secret: ${EFI_CLIENT_SECRET:}
