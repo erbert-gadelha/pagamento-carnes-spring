@@ -1,11 +1,13 @@
 package com.ebgr.pagamento_carnes.runner;
 
+import com.ebgr.pagamento_carnes.controller.dto.UserDTO;
 import com.ebgr.pagamento_carnes.efi.EfiHelper;
 import com.ebgr.pagamento_carnes.efi.dto.DTO_efi;
 import com.ebgr.pagamento_carnes.jwt.JwtUtil;
 import com.ebgr.pagamento_carnes.model.UserModel;
 import com.ebgr.pagamento_carnes.repository.PaymentRepository;
 import com.ebgr.pagamento_carnes.repository.UserRepository;
+import com.ebgr.pagamento_carnes.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
@@ -25,6 +27,9 @@ public class RunnerPrd implements CommandLineRunner {
     @Autowired
     private PaymentRepository paymentRepository;
 
+    @Autowired
+    private UserService userService;
+
 
     @Value("${application.domain:}")
     String appDomain;
@@ -32,6 +37,7 @@ public class RunnerPrd implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         JwtUtil.setDomain(appDomain);
+        userService.create(new UserDTO(null, "erbert", "Erbert Gadelha", "1234"));
         getUsers();
         /*var cobranca =  efiHelper.criarCobrancaImediata(new DTO_efi.Devedor("70292933479", "Fulano da Silva"), 0.25, 60);
         var qrCode = efiHelper.criarQrCode(cobranca);

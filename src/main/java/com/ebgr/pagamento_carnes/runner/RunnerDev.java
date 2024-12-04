@@ -72,7 +72,7 @@ public class RunnerDev implements CommandLineRunner {
 
     private void testPixApi() {
         efiHelper.exibirListaDeCobrancas();
-        CobrancaImediata.Response cobrancaImediata = efiHelper.criarCobrancaImediata(new DTO_efi.Devedor("70292933479", "Erbert Gadelha"), 0.25f, "null");
+        CobrancaImediata.Response cobrancaImediata = efiHelper.criarCobrancaImediata(new DTO_efi.Devedor("70292933479", "Erbert Gadelha"));
         if(cobrancaImediata != null) {
             GerarQRCode.Response qrCode = efiHelper.criarQrCode(cobrancaImediata);
             System.out.println("\n\nqrCode: " + qrCode);
