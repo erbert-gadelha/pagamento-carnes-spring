@@ -27,7 +27,7 @@ public class PaymentModel {
     private Integer paymentMonth;
     @Column(name="payment_year")
     private Integer paymentYear;
-
+    @Setter
     private String txid;
     @Setter
     private String pixUrl;
@@ -52,13 +52,13 @@ public class PaymentModel {
 
 
     public PaymentMonthDTO serialize() {
-        PaymentMonthDTO dto = new PaymentMonthDTO(
+        return new PaymentMonthDTO(
                 this.paymentMonth,
                 this.paymentYear,
+                this.expiresAt,
                 this.closedAt,
                 this.pixUrl
         );
-        return dto;
     }
 
 
@@ -66,8 +66,9 @@ public class PaymentModel {
     private static Random random= new Random();
     private static String generate_txid() {
         long randomNumber = (LocalDateTime.now().toEpochSecond(ZoneOffset.ofHours(0))*1000 + random.nextInt(0, 1_024));
-        return String.format("%035d", randomNumber);
+        return String.format("%032d", randomNumber);
     }
+
 
     /*@Override
     public String toString() {
