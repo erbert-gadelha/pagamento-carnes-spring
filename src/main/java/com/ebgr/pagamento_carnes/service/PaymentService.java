@@ -63,7 +63,7 @@ public class PaymentService {
 
         final PaymentModel paymentModel_1 = new PaymentModel(userModel, month, year);
         final CobrancaImediata.Response cobrancaImediata = efiHelper.criarCobrancaImediata(new DTO_efi.Devedor("70292933479", "Erbert"));
-        efiHelper.criarWebhook(cobrancaImediata.txid());
+        efiHelper.criarWebhook(cobrancaImediata);
         final GerarQRCode.Response qrCode = efiHelper.criarQrCode(cobrancaImediata);
 
         final String criacao = cobrancaImediata.calendario().criacao();
