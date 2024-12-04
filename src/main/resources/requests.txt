@@ -1,0 +1,37 @@
+# CRIAR USUÁRIO
+curl --header "Content-Type: application/json" \
+  --request POST \
+  --data '{"login":"user", "password":"1234", "name": "Fulano de Tal" }'\
+  http://localhost:8080/api/user/create
+
+# AUTENTICAR USUÁRIO
+curl --cookie cookie.txt --cookie-jar cookie.txt --header "Content-Type: application/json" \
+  --request POST \
+  --data '{"login":"erbert","password":"1234"}'\
+  http://localhost:8080/api/user/authenticate
+
+# ABOUT ME
+curl --cookie cookie.txt --cookie-jar cookie.txt --header "Content-Type: application/json" \
+  --request GET \
+  http://localhost:8080/me
+  
+# CREATE PAYMENT
+curl --cookie cookie.txt --cookie-jar cookie.txt --header "Content-Type: application/json" \
+  --request POST \
+  http://localhost:8080/api/payment/create/6/2024  
+  
+# GET WEBHOOKS
+curl --cookie cookie.txt --cookie-jar cookie.txt --header "Content-Type: application/json" \
+  --request GET \
+  http://localhost:8080/api/payment/webhooks
+  
+  
+# WEBHOOK HELLOWORLD
+curl --cookie cookie.txt --cookie-jar cookie.txt --header "Content-Type: application/json" \
+  --request POST \
+    https://pagamento-carnes-production.up.railway.app/api/payment/e910d8558e2d42f68793cd4044e6b984
+  
+  
+  
+
+  
