@@ -158,6 +158,9 @@ public class EfiHelperImpl implements EfiHelper {
     }
 
     private ClassicHttpRequest createHttpsRequest(Method method, String query, String body) {
+
+        System.out.println("createHttpsRequest (" + url + query + ").");
+
         ClassicHttpRequest request = ClassicRequestBuilder
                 .create(method.name())
                 .setUri(url + query)
@@ -177,9 +180,7 @@ public class EfiHelperImpl implements EfiHelper {
     public void criarWebhook(final String txid) {
         tryAuthenticate();
 
-        String webhookUrl = String.format("%s/api/payment/%s", applicationDomain, txid );
-
-        System.out.println("webhook: (" + webhookUrl + ").");
+        String webhookUrl = String.format("/api/payment/%s", txid );
 
         ClassicHttpRequest request = createHttpsRequest(
                 Method.PUT,
@@ -197,6 +198,8 @@ public class EfiHelperImpl implements EfiHelper {
 
             String responseString = EntityUtils.toString(response.getEntity(), "UTF-8");
             System.err.println("criarWebhook ["+statusCode+"]: " + responseString);
+            System.err.println(responseString);
+
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
