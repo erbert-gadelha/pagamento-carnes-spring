@@ -65,7 +65,8 @@ public class PaymentModel {
 
     private static Random random= new Random();
     private static String generate_txid() {
-        return (LocalDateTime.now().toEpochSecond(ZoneOffset.ofHours(0)) + "_" + random.nextInt(0, 2_147_483_647));
+        long randomNumber = (LocalDateTime.now().toEpochSecond(ZoneOffset.ofHours(0))*1000 + random.nextInt(0, 1_024));
+        return String.format("%035d", randomNumber);
     }
 
     /*@Override
