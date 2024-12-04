@@ -55,7 +55,7 @@ public class PaymentController {
     }
 
     @PostMapping("webhook")
-    public ResponseEntity<String> efiHandShake(@PathVariable int txid) {
+    public ResponseEntity<String> efiHandShake(@PathVariable String txid) {
         return ResponseEntity.ok().body(null);
     }
 
