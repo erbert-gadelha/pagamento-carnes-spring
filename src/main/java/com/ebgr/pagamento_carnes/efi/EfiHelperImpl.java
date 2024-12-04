@@ -201,18 +201,20 @@ public class EfiHelperImpl implements EfiHelper {
                 null
         );
 
-
+        System.out.println("txid: " + txid);
 
         tryAuthenticate();
         ClassicHttpRequest request = createHttpsRequest(
-                Method.POST,
+                Method.PUT,
                 "/v2/cob/"+txid,
+                //"/v2/cob",
                 objectToJson(cobrancaImediata));
 
         try (CloseableHttpResponse response = httpClient.execute(request)) {
             int statusCode = response.getCode();
             System.out.println("Response Code (criarCobrancaImediata): " + statusCode);
             String responseString = EntityUtils.toString(response.getEntity(), "UTF-8");
+            System.err.println("responseString: " + responseString);
             if(statusCode >= 200 && statusCode < 300) {
                 CobrancaImediata.Response responseDto = objectMapper.readValue(responseString, CobrancaImediata.Response.class);
                 System.out.println(responseDto);
