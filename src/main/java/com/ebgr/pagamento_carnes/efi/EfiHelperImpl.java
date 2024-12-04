@@ -177,18 +177,15 @@ public class EfiHelperImpl implements EfiHelper {
     public void criarWebhook(final String txid) {
         tryAuthenticate();
 
-        System.out.println("webhook: " + String.format("(%s/api/payment/%s)", applicationDomain, txid ));
+        String webhookUrl = String.format("%s/api/payment/%s", applicationDomain, txid );
 
+        System.out.println("webhook: (" + webhookUrl + ").");
 
         ClassicHttpRequest request = createHttpsRequest(
                 Method.PUT,
-                " /v2/webhook/"+txid,
-                String.valueOf(new CriarWebhook.Request(
-                        String.format("%s/api/payment/%s",
-                                applicationDomain,
-                                txid
-                        ))
-                ));
+                "/v2/webhook/"+txid,
+                String.valueOf(new CriarWebhook.Request(webhookUrl))
+        );
 
 
         try (CloseableHttpResponse response = httpClient.execute(request)) {
