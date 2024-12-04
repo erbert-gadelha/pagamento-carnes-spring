@@ -60,7 +60,7 @@ public class PaymentController {
     }
 
     @PostMapping("webhook/{txid}")
-    public ResponseEntity<String> efiWebHook(@PathVariable int txid, @RequestBody Map<String, Object> body) {
+    public ResponseEntity<String> efiWebHook(@PathVariable String txid, @RequestBody Map<String, Object> body) {
 
         System.err.println("webhook foi requisitada.");
         System.err.println("body <" + body.size() + ">");
