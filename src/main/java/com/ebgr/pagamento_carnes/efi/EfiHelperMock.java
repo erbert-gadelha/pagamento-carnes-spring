@@ -17,7 +17,7 @@ public class EfiHelperMock implements EfiHelper {
     }
 
     @Override
-    public void criarWebhook(String txid){}
+    public void criarWebhook(CobrancaImediata.Response cobrancaImediata){}
 
 
     @Override
@@ -93,11 +93,11 @@ public class EfiHelperMock implements EfiHelper {
 
     @Override
     public CobrancaImediata.Response criarCobrancaImediata(DTO_efi.Devedor devedor) {
-        return criarCobrancaImediata(devedor, 2, "12345678");
+        return criarCobrancaImediata(devedor, 2);
     }
 
     @Override
-    public CobrancaImediata.Response criarCobrancaImediata(DTO_efi.Devedor devedor, double valor, String txid) {
+    public CobrancaImediata.Response criarCobrancaImediata(DTO_efi.Devedor devedor, double valor) {
         return new CobrancaImediata.Response(
                 new DTO_efi.Calendario(LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME), this.pixLifetime),
                 "1e5c5b8fd6a84e7eb3dafe5f08804596",

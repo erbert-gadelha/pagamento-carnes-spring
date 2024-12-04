@@ -9,7 +9,7 @@ public interface EfiHelper {
     public void imprimirWebhooks();
     public void exibirListaDeCobrancas();
     public CobrancaImediata.Response criarCobrancaImediata (DTO_efi.Devedor devedor);
-    public CobrancaImediata.Response criarCobrancaImediata (DTO_efi.Devedor devedor, double valor, String txid);
+    public CobrancaImediata.Response criarCobrancaImediata (DTO_efi.Devedor devedor, double valor);
     public GerarQRCode.Response criarQrCode (CobrancaImediata.Response cobrancaImediata);
-    public void criarWebhook(String txid);
+    public void criarWebhook(CobrancaImediata.Response cobrancaImediata);
 }

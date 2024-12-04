@@ -204,19 +204,19 @@ public class EfiHelperImpl implements EfiHelper {
     }
 
     @Override
-    public void criarWebhook(final String txid) {
+    public void criarWebhook(final CobrancaImediata.Response cobrancaImediata) {
         tryAuthenticate();
 
 
 
         CriarWebhook.Request requestBody = new CriarWebhook.Request(
                 //String.format("%s/api/payment/%s",applicationDomain, txid)
-                String.format("https://pagamento-carnes-production.up.railway.app/api/payment/%s", txid)
+                String.format("https://pagamento-carnes-production.up.railway.app/api/payment/webhook/%s", cobrancaImediata.txid())
         );
 
         ClassicHttpRequest request = createHttpsRequest(
                 Method.PUT,
-                "/v2/webhook/48c34d56-f0f7-44e8-bf0d-07e242ef98e7"/*+txid*/,
+                "/v2/webhook/"+cobrancaImediata.chave(),
                 objectToJson(requestBody)
         );
 
@@ -293,7 +293,7 @@ public class EfiHelperImpl implements EfiHelper {
 
 
     @Override
-    public CobrancaImediata.Response criarCobrancaImediata (DTO_efi.Devedor devedor, double valor, String txid) {
+    public CobrancaImediata.Response criarCobrancaImediata (DTO_efi.Devedor devedor, double valor) {
         CobrancaImediata.Request cobrancaImediata = new CobrancaImediata.Request(
                 new DTO_efi.CalendarioSemCriacao(this.pixLifetime),
                 devedor,
@@ -302,13 +302,11 @@ public class EfiHelperImpl implements EfiHelper {
                 null
         );
 
-        System.out.println("txid: " + txid);
 
         tryAuthenticate();
         ClassicHttpRequest request = createHttpsRequest(
                 Method.PUT,
-                "/v2/cob/"+txid,
-                //"/v2/cob",
+                "/v2/cob",
                 objectToJson(cobrancaImediata));
 
         try (CloseableHttpResponse response = httpClient.execute(request)) {
