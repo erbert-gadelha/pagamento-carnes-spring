@@ -1,11 +1,11 @@
 application:
-  domain: ${APPLICATION_DOMAIN:localhost}
+  domain: ${APPLICATION_DOMAIN:""}
 efi:
   client_id: ${EFI_CLIENT_ID:}
   client_secret: ${EFI_CLIENT_SECRET:}
   url: ${EFI_URL:https://pix.api.efipay.com.br}
   base64p12: ${EFI_BASE64_P12:""}
-  pixLifetime: ${EFI_CLIENT_SECRET:3600}
+  pixLifetime: ${EFI_PIX_LIFETIME:3600}
 spring:
   profiles:
     active: dev

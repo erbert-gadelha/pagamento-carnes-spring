@@ -23,16 +23,18 @@ public class Efi {
     String url;
     @Value("${efi.base64p12}")
     private String base64P12;
+    @Value("${efi.pixLifetime}")
+    private int pixLifetime;
 
     @Bean
     @Profile("prd")
     public EfiHelper efiHelperImpl() throws Exception {
-        return new EfiHelperImpl(client_id, client_secret, url, base64P12);
+        return new EfiHelperImpl(client_id, client_secret, url, base64P12, pixLifetime);
     }
 
     @Bean
     @Profile("dev")
     public EfiHelper efiHelperMock() {
-        return new EfiHelperMock();
+        return new EfiHelperMock(pixLifetime);
     }
 }

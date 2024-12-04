@@ -1,3 +1,5 @@
+efi:
+  pixLifetime: ${EFI_PIX_LIFETIME:5}
 spring:
   application:
     name: Pagamento Carnes
