@@ -38,10 +38,11 @@ public class RunnerDev implements CommandLineRunner {
 
 
     @Value("${application.domain:}")
-    String appDomain;
+    private String appDomain;
 
     @Override
     public void run(String... args) throws Exception {
+        System.err.println("appDomain: " + appDomain);
         JwtUtil.setDomain(appDomain);
         feedRepository();
     }
@@ -71,7 +72,7 @@ public class RunnerDev implements CommandLineRunner {
 
     private void testPixApi() {
         efiHelper.exibirListaDeCobrancas();
-        CobrancaImediata.Response cobrancaImediata = efiHelper.criarCobrancaImediata(new DTO_efi.Devedor("70292933479", "Erbert Gadelha"), 0.25f);
+        CobrancaImediata.Response cobrancaImediata = efiHelper.criarCobrancaImediata(new DTO_efi.Devedor("70292933479", "Erbert Gadelha"), 0.25f, "null");
         if(cobrancaImediata != null) {
             GerarQRCode.Response qrCode = efiHelper.criarQrCode(cobrancaImediata);
             System.out.println("\n\nqrCode: " + qrCode);
