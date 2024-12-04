@@ -1,6 +1,7 @@
 package com.ebgr.pagamento_carnes.efi;
 
 import com.ebgr.pagamento_carnes.efi.dto.CobrancaImediata;
+import com.ebgr.pagamento_carnes.efi.dto.CriarWebhook;
 import com.ebgr.pagamento_carnes.efi.dto.GerarQRCode;
 import com.ebgr.pagamento_carnes.efi.dto.DTO_efi;
 import org.apache.hc.client5.http.classic.methods.HttpPost;
@@ -29,6 +30,7 @@ import java.util.*;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Value;
 
 public class EfiHelperImpl implements EfiHelper {
 
@@ -37,13 +39,16 @@ public class EfiHelperImpl implements EfiHelper {
     private final String url;
     private String acessToken;
     private final int pixLifetime;
-
+    @Value("${efi.pixValue}")
+    private double pixValue;
 
     private LocalDateTime expirationTime = LocalDateTime.MIN;
 
-    private final CloseableHttpClient httpClient;
+    private CloseableHttpClient httpClient;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
+    @Value("${application.domain:}")
+    private String applicationDomain;
 
     public EfiHelperImpl (String client_id, String client_secret, String url, String base64P12, int pixLifetime) throws Exception {
         this.client_id = client_id;
@@ -51,28 +56,26 @@ public class EfiHelperImpl implements EfiHelper {
         this.url = url;
         this.pixLifetime = pixLifetime;
 
-        System.out.printf("*\n*\n* EFI [IMPL]:\n*\turl - %s\n*\tpixLifetime - %d\n*\n*\n", url, pixLifetime);
+        try { setKeyStore(base64P12); }
+        catch (Exception e) { throw e;/*new Error("EfiHelperImpl: Certificado p12 invalido.");*/ }
+
+        System.out.printf("* * * *\n* EFI [IMPL]:\n*\turl + %s\n*\tpixLifetime - %d\n* * * *\n", url, pixLifetime);
+    }
 
 
+
+    private void setKeyStore(String base64P12) throws Exception {
         KeyStore keyStore = KeyStore.getInstance("PKCS12");
         byte[] decodedBytes = Base64.getDecoder().decode(base64P12);
         keyStore.load(new ByteArrayInputStream(decodedBytes), null);
-
-
-        //try (InputStream keyStoreStream = new FileInputStream("src/main/resources/producao-616112-pagamento-carnes.p12")) {   keyStore.load(keyStoreStream, null);    }
-
-        // Criar SSLContext com o keystore
         SSLContext sslContext = SSLContextBuilder.create()
-                .loadKeyMaterial(keyStore, null) // KeyStore sem senha
-                .loadTrustMaterial((X509Certificate[] chain, String authType) -> true) // Ignorar validação de certificado (apenas para teste)
+                .loadKeyMaterial(keyStore, null)
+                .loadTrustMaterial((X509Certificate[] chain, String authType) -> true)
                 .build();
-
         SSLConnectionSocketFactory socketFactory = new SSLConnectionSocketFactory(sslContext);
         HttpClientConnectionManager connectionManager = PoolingHttpClientConnectionManagerBuilder.create().setSSLSocketFactory(socketFactory).build();
         this.httpClient = HttpClients.custom().setConnectionManager(connectionManager).build();
     }
-
-
 
     private void tryAuthenticate () {
 
@@ -170,6 +173,38 @@ public class EfiHelperImpl implements EfiHelper {
         return request;
     }
 
+    @Override
+    public void criarWebhook(final String txid) {
+        tryAuthenticate();
+
+        System.out.println("webhook: " + String.format("(%s/api/payment/%s)", applicationDomain, txid ));
+
+
+        ClassicHttpRequest request = createHttpsRequest(
+                Method.PUT,
+                " /v2/webhook/"+txid,
+                String.valueOf(new CriarWebhook.Request(
+                        String.format("%s/api/payment/%s",
+                                applicationDomain,
+                                txid
+                        ))
+                ));
+
+
+        try (CloseableHttpResponse response = httpClient.execute(request)) {
+            int statusCode = response.getCode();
+            if(statusCode >= 200 && statusCode < 300) {
+                System.out.println("criarWebhook [ok]");
+                return;
+            }
+
+            String responseString = EntityUtils.toString(response.getEntity(), "UTF-8");
+            System.err.println("criarWebhook ["+statusCode+"]: " + responseString);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 
     @Override
     public void exibirListaDeCobrancas() {
@@ -189,6 +224,40 @@ public class EfiHelperImpl implements EfiHelper {
         }
     }
 
+
+    @Override
+    public CobrancaImediata.Response criarCobrancaImediata (DTO_efi.Devedor devedor) {
+        CobrancaImediata.Request cobrancaImediata = new CobrancaImediata.Request(
+                new DTO_efi.CalendarioSemCriacao(this.pixLifetime),
+                devedor,
+                new DTO_efi.Valor (String.format("%.2f", this.pixValue)),
+                "48c34d56-f0f7-44e8-bf0d-07e242ef98e7",
+                null
+        );
+
+        tryAuthenticate();
+        ClassicHttpRequest request = createHttpsRequest(
+                Method.POST,
+                "/v2/cob",
+                objectToJson(cobrancaImediata));
+
+        try (CloseableHttpResponse response = httpClient.execute(request)) {
+            int statusCode = response.getCode();
+            System.out.println("Response Code (criarCobrancaImediata): " + statusCode);
+            String responseString = EntityUtils.toString(response.getEntity(), "UTF-8");
+            System.err.println("responseString: " + responseString);
+            if(statusCode >= 200 && statusCode < 300) {
+                CobrancaImediata.Response responseDto = objectMapper.readValue(responseString, CobrancaImediata.Response.class);
+                System.out.println(responseDto);
+                return responseDto;
+            } else {
+                System.err.println("responseString: " + responseString);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return null;
+    }
 
 
     @Override

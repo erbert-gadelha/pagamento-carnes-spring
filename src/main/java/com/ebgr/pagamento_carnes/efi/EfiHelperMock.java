@@ -16,6 +16,10 @@ public class EfiHelperMock implements EfiHelper {
     }
 
     @Override
+    public void criarWebhook(String txid){}
+
+
+    @Override
     public void exibirListaDeCobrancas() {
         System.out.println("""
                 {
@@ -84,6 +88,11 @@ public class EfiHelperMock implements EfiHelper {
                         }
                 ]
                 }""");
+    }
+
+    @Override
+    public CobrancaImediata.Response criarCobrancaImediata(DTO_efi.Devedor devedor) {
+        return criarCobrancaImediata(devedor, 2, "12345678");
     }
 
     @Override
