@@ -45,7 +45,7 @@ public class PaymentModel {
         this.paymentYear = paymentYear;
         this.paymentMonth = paymentMonth;
         this.expiresAt = null;
-        //this.txid = generate_txid();
+        this.txid = generate_txid();
     }
 
 
@@ -61,11 +61,11 @@ public class PaymentModel {
 
 
 
-    /*private static Random random= new Random();
+    private static Random random= new Random();
     private static String generate_txid() {
         long randomNumber = (LocalDateTime.now().toEpochSecond(ZoneOffset.ofHours(0))*1000 + random.nextInt(0, 1_024));
         return String.format("%032d", randomNumber);
-    }*/
+    }
 
 
     @Override

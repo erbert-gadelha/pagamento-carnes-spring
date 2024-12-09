@@ -29,9 +29,14 @@ curl --cookie cookie.txt --cookie-jar cookie.txt --header "Content-Type: applica
 # WEBHOOK HELLOWORLD
 curl --cookie cookie.txt --cookie-jar cookie.txt --header "Content-Type: application/json" \
   --request POST \
-    https://pagamento-carnes-production.up.railway.app/api/payment/e910d8558e2d42f68793cd4044e6b984
+  http://localhost:8080/api/payment/3
   
-  
-  
+# WEBHOOK CONFIRMATION
+curl --cookie cookie.txt --cookie-jar cookie.txt --header "Content-Type: application/json" \
+  --request POST \
+  --data '{"pix":[{"endToEndId":"endToEndId","txid":"3","chave":"chave","valor":"0.05","horario":"2020-12-21T13:40:34.000Z","infoPagador":"pagando o pix"}]}'\
+  http://localhost:8080/api/payment/webhook/3/pix
+
+
 
   

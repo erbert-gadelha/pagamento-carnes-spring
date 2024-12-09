@@ -65,8 +65,13 @@ public class Runner implements CommandLineRunner {
 
         for(int i = 0; i < 5; i++) {
             PaymentModel paymentModel = new PaymentModel(erbert, i, 2024);
+            paymentModel.setTxid(String.valueOf(i));
+
             if(i < 3)
                 paymentModel.setClosedAt(LocalDateTime.now());
+            else
+                paymentModel.setPixUrl("https://www.google.com");
+
             paymentRepository.save(paymentModel);
         }
     }

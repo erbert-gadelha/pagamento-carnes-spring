@@ -30,9 +30,9 @@ public class Efi {
 
     @Bean
     public EfiHelper efiHelper() throws Exception {
-        //if(activeProfile.equals("prd"))
+        if(activeProfile.equals("prd"))
             return new EfiHelperImpl(client_id, client_secret, url, base64P12, pixLifetime);
-        //return new EfiHelperMock(pixLifetime);
+        return new EfiHelperMock(pixLifetime);
     }
 
 }
