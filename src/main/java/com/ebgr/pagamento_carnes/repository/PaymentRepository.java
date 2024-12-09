@@ -15,6 +15,8 @@ public interface PaymentRepository  extends CrudRepository<PaymentModel, Integer
     //List<PaymentModel> findAllByUserAndExpiresAtAfter(UserModel user, LocalDateTime expiresAt);
     List<PaymentModel> findAllByUserAndExpiresAtAfterOrExpiresAtIsNull(UserModel user, LocalDateTime expiresAt);
     List<PaymentModel> findAllByExpiresAtBefore(LocalDateTime expiresAt);
+    public Optional<PaymentModel> findByTxid(String txid);
+    public List<PaymentModel> findAllByClosedAtIsNull();
 
     public List<PaymentModel> findAll();
     //public void delete(List<PaymentModel> paymentModels);

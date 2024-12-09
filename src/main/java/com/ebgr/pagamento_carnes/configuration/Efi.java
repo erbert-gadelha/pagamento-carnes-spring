@@ -25,16 +25,14 @@ public class Efi {
     private String base64P12;
     @Value("${efi.pixLifetime}")
     private int pixLifetime;
+    @Value("${spring.profiles.active}")
+    private String activeProfile;
 
     @Bean
-    @Profile("prd")
-    public EfiHelper efiHelperImpl() throws Exception {
-        return new EfiHelperImpl(client_id, client_secret, url, base64P12, pixLifetime);
+    public EfiHelper efiHelper() throws Exception {
+        //if(activeProfile.equals("prd"))
+            return new EfiHelperImpl(client_id, client_secret, url, base64P12, pixLifetime);
+        //return new EfiHelperMock(pixLifetime);
     }
 
-    @Bean
-    @Profile("dev")
-    public EfiHelper efiHelperMock() {
-        return new EfiHelperMock(pixLifetime);
-    }
 }

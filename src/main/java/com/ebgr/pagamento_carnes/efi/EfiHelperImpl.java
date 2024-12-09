@@ -1,9 +1,7 @@
 package com.ebgr.pagamento_carnes.efi;
 
-import com.ebgr.pagamento_carnes.efi.dto.CobrancaImediata;
-import com.ebgr.pagamento_carnes.efi.dto.CriarWebhook;
-import com.ebgr.pagamento_carnes.efi.dto.GerarQRCode;
-import com.ebgr.pagamento_carnes.efi.dto.DTO_efi;
+import com.ebgr.pagamento_carnes.efi.dto.*;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.apache.hc.client5.http.classic.methods.HttpPost;
 import org.apache.hc.client5.http.entity.UrlEncodedFormEntity;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
@@ -150,7 +148,7 @@ public class EfiHelperImpl implements EfiHelper {
     private Map<String, String> decodeResponse(CloseableHttpResponse response) {
         try {
             String responseString = EntityUtils.toString(response.getEntity(), "UTF-8");
-            System.out.println("responseString: " + responseString);
+            System.out.println("[decodeResponse] " + responseString);
             return objectMapper.readValue(responseString, new TypeReference<Map<String, String>>() {});
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -210,8 +208,7 @@ public class EfiHelperImpl implements EfiHelper {
 
 
         CriarWebhook.Request requestBody = new CriarWebhook.Request(
-                //String.format("%s/api/payment/%s",applicationDomain, txid)
-                String.format("https://pagamento-carnes-production.up.railway.app/api/payment/webhook/%s", cobrancaImediata.txid())
+                String.format("https://%s/api/payment/webhook/%s", applicationDomain, cobrancaImediata.txid())
         );
 
         ClassicHttpRequest request = createHttpsRequest(
@@ -357,4 +354,19 @@ public class EfiHelperImpl implements EfiHelper {
     }
 
 
+    private <C> C jsonToObject(String json, Class<?> class_) {
+        try {
+            return (C) objectMapper.readValue(json, class_);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    @Override
+    public LocalDateTime verificarCobranca(String txid) {
+        HttpRequest response = createHttpsRequest(Method.GET, "v2/cob/"+txid, "");
+        ConsultarCobrancaDTO consulta = jsonToObject(response.toString(), ConsultarCobrancaDTO.class);
+        System.err.println(consulta);
+        return null;
+    }
 }

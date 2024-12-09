@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.Random;
 
-@ToString
+//@ToString
 @Getter
 @NoArgsConstructor
 @Entity
@@ -45,10 +45,8 @@ public class PaymentModel {
         this.paymentYear = paymentYear;
         this.paymentMonth = paymentMonth;
         this.expiresAt = null;
-        this.txid = generate_txid();
+        //this.txid = generate_txid();
     }
-
-    public int getPaymentMonth() { return paymentMonth; }
 
 
     public PaymentMonthDTO serialize() {
@@ -63,30 +61,16 @@ public class PaymentModel {
 
 
 
-    private static Random random= new Random();
+    /*private static Random random= new Random();
     private static String generate_txid() {
         long randomNumber = (LocalDateTime.now().toEpochSecond(ZoneOffset.ofHours(0))*1000 + random.nextInt(0, 1_024));
         return String.format("%032d", randomNumber);
-    }
-
-
-    /*@Override
-    public String toString() {
-        return String.format("""
-                Payment: {
-                    id: %s
-                    user: {
-                        id: %d,
-                        name: %s,
-                        password: %s
-                    },
-                    month: %d,
-                    year: %d,
-                    pixUrl: %s,
-                    expiresAt: %s,
-                    closedAt: %s
-                }
-                """, id, user.getId(), user.getName(), user.getPassword(), paymentMonth, paymentYear, pixUrl, expiresAt, closedAt);
     }*/
+
+
+    @Override
+    public String toString() {
+        return String.format("PaymentModel[id=%d, user=UserModel[...], paymentMonth=%d, paymentYear=%d, txid=%s, pixUrl=%s, expiresAt=%s, closedAt=%s]", id, paymentMonth, paymentYear, txid, pixUrl, expiresAt, closedAt);
+    }
 
 }

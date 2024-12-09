@@ -2,6 +2,7 @@ package com.ebgr.pagamento_carnes.service;
 
 
 import com.ebgr.pagamento_carnes.controller.dto.PaymentMonthDTO;
+import com.ebgr.pagamento_carnes.controller.dto.WebhookDTO;
 import com.ebgr.pagamento_carnes.efi.EfiHelper;
 import com.ebgr.pagamento_carnes.efi.dto.CobrancaImediata;
 import com.ebgr.pagamento_carnes.efi.dto.DTO_efi;
@@ -42,41 +43,51 @@ public class PaymentService {
         return paymentModels.stream().map(PaymentModel::serialize).toList();
     }
 
-    public PaymentMonthDTO createOrGetPayment(String login, int month, int year) {
-
-        UserModel userModel = userService.findUserOrThrow(login);
-        final PaymentModel paymentModel_0 = paymentRepository.findByUserAndPaymentMonthAndPaymentYear(
-                userModel,
-                month,
-                year
-        ).orElse(null);
-
-
-        if(paymentModel_0 != null)
-            if( paymentModel_0.getPixUrl() != null && paymentModel_0.getExpiresAt().isAfter(LocalDateTime.now()))
-                return paymentModel_0.serialize();
+    private PaymentModel getValidInstance(UserModel userModel, int month, int year) {
+        final PaymentModel paymentModel = paymentRepository.findByUserAndPaymentMonthAndPaymentYear(
+                userModel, month, year).orElse(null);
+        if(paymentModel != null) {
+            if (paymentModel.getPixUrl() != null && paymentModel.getExpiresAt().isAfter(LocalDateTime.now()))
+                return paymentModel;
             else
-                paymentRepository.delete(paymentModel_0);
+                paymentRepository.delete(paymentModel);
+        }
+        return null;
+    }
+
+    public PaymentMonthDTO createOrGetPayment(String login, int month, int year) {
+        UserModel userModel = userService.findUserOrThrow(login);
+
+        PaymentModel previousInstance = getValidInstance( userModel, month, year );
+        if(previousInstance != null)
+            return previousInstance.serialize();
 
 
-
-
-        final PaymentModel paymentModel_1 = new PaymentModel(userModel, month, year);
+        final PaymentModel paymentModel = new PaymentModel(userModel, month, year);
         final CobrancaImediata.Response cobrancaImediata = efiHelper.criarCobrancaImediata(new DTO_efi.Devedor("70292933479", "Erbert"));
-        efiHelper.criarWebhook(cobrancaImediata);
         final GerarQRCode.Response qrCode = efiHelper.criarQrCode(cobrancaImediata);
+        //efiHelper.criarWebhook(cobrancaImediata);
+        new Thread(()-> efiHelper.criarWebhook(cobrancaImediata)).start();
 
         final String criacao = cobrancaImediata.calendario().criacao();
         final int expiracao = cobrancaImediata.calendario().expiracao();
-        paymentModel_1.setExpiresAt(parseLocalDateTime(criacao).plusSeconds(expiracao));
-        paymentModel_1.setPixUrl(qrCode.linkVisualizacao());
-        paymentModel_1.setTxid(cobrancaImediata.txid());
+        paymentModel.setExpiresAt(parseLocalDateTime(criacao).plusSeconds(expiracao));
+        paymentModel.setPixUrl(qrCode.linkVisualizacao());
+        paymentModel.setTxid(cobrancaImediata.txid());
 
 
+        paymentRepository.save(paymentModel);
+        return paymentModel.serialize();
+    }
 
-        paymentRepository.save(paymentModel_1);
+    public boolean confirmPayment(WebhookDTO webhookDTO) {
+        PaymentModel paymentModel = paymentRepository.findByTxid(webhookDTO.pix()[0].txid()).orElse(null);
+        if (paymentModel == null)
+            return false;
 
-        return paymentModel_1.serialize();
+        paymentModel.setClosedAt(webhookDTO.pix()[0].horario().toLocalDateTime());
+        paymentRepository.save(paymentModel);
+        return true;
     }
 
     private static LocalDateTime parseLocalDateTime (String isoDate) {
@@ -85,5 +96,12 @@ public class PaymentService {
                 .toLocalDateTime();
     }
 
+
+
+
+    public void verifyPayment(PaymentModel paymentModel) {
+        System.err.println("verifyPayment: " + efiHelper.verificarCobranca(paymentModel.getTxid()));
+        //System.err.println("deveria estar verificando");
+    }
 
 }

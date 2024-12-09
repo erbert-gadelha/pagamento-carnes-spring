@@ -6,7 +6,7 @@ efi:
   url: ${EFI_URL:https://pix.api.efipay.com.br}
   base64p12: ${EFI_BASE64_P12:""}
   pixLifetime: ${EFI_PIX_LIFETIME:30}
-  pixValue: ${EFI_PIX_Value:0.25}
+  pixValue: ${EFI_PIX_VALUE:0.25}
 spring:
   profiles:
     active: dev

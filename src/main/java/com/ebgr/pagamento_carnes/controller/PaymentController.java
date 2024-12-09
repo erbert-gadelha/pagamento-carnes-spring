@@ -3,6 +3,7 @@ package com.ebgr.pagamento_carnes.controller;
 import com.ebgr.pagamento_carnes.controller.dto.PaymentDTO;
 import com.ebgr.pagamento_carnes.controller.dto.PaymentMonthDTO;
 import com.ebgr.pagamento_carnes.controller.dto.PaymentsSummary;
+import com.ebgr.pagamento_carnes.controller.dto.WebhookDTO;
 import com.ebgr.pagamento_carnes.efi.EfiHelper;
 import com.ebgr.pagamento_carnes.efi.dto.GerarQRCode;
 import com.ebgr.pagamento_carnes.model.UserModel;
@@ -54,19 +55,20 @@ public class PaymentController {
                 );
     }
 
-    @PostMapping("webhook")
-    public ResponseEntity<String> efiHandShake(@PathVariable String txid) {
-        return ResponseEntity.ok().body(null);
-    }
+
 
     @PostMapping("webhook/{txid}")
     public ResponseEntity<String> efiWebHook(@PathVariable String txid, @RequestBody Map<String, Object> body) {
+        System.out.println("[Controller] efiWebHook: " + txid + ".");
+        return ResponseEntity.ok().body(null);
+    }
 
-        System.err.println("webhook foi requisitada.");
-        System.err.println("body <" + body.size() + ">");
-        for ( String key : body.keySet() )
-            System.out.println(key + ":" + body.get(key));
 
+    @PostMapping("webhook/{txid}/pix")
+    public ResponseEntity<String> efiWebHookPix(@PathVariable String txid, @RequestBody WebhookDTO dto) {
+        System.out.println("[Controller] efiWebHookPix: " + txid + ".");
+        assert dto != null;
+        paymentService.confirmPayment(dto);
         return ResponseEntity.ok().body(null);
     }
 
