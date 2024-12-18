@@ -22,3 +22,9 @@ spring:
       settings:
         trace: false
         web-allow-others: false
+logging:
+  level:
+    org:
+      springframework:
+        web:
+          socket: DEBUG
