@@ -1,0 +1,14 @@
+{"sender":"Fulano", "content":"0-Olá, aspirantes!"}
+{"sender":"Sicrano", "content":"1-Dale, comparca!"}
+{"sender":"Sicrano", "content":"2-Voces gostam de peixe?"}
+{"sender":"Fulano", "content":"3-Gosto não, pvt."}
+{"sender":"Fulano", "content":"4-Mas e uma aguinha de coco em?"}
+{"sender":"Sicrano", "content":"5-É dentro demais."}
+{"sender":"Fulano", "content":"6-Agua de coco é top po"}
+{"sender":"Sicrano", "content":"7-oxe e ent boy"}
+{"sender":"Sicrano", "content":"8-Do valor demais."}
+{"sender":"Fulano", "content":"9-É nois boy"}
+{"sender":"Fulano", "content":"10-Bora vava?"}
+{"sender":"Sicrano", "content":"11-BORAA!"}
+{"sender":"erbert","content":"dale thurma"}
+{"sender":"erbert","content":"Ola"}

@@ -31,6 +31,10 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 
+	// WEBSOCKET
+	implementation 'org.springframework.boot:spring-boot-starter-websocket:3.4.0'
+
+
 
 	// JWT
 	implementation 'com.auth0:java-jwt:4.4.0'

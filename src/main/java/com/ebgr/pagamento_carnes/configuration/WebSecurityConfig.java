@@ -36,6 +36,10 @@ public class WebSecurityConfig {
             "/api/user/create",
             "/api/user/authenticate",
             "/api/payment/webhook/**",
+            "/ws",
+            "/ws/**",
+            "/api/v1/messages",
+            "/api/v1/messages/**"
     };
 
     @Autowired
