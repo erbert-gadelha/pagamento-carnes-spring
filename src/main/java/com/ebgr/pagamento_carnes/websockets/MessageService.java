@@ -50,6 +50,9 @@ public class MessageService {
     }*/
 
     public synchronized List<String> readMessages(int lastId) {
+        if(lastId < 0)
+            return Collections.emptyList();
+
         try {
             Path path = Paths.get(this.path);
             List<String> lines = Files.readAllLines(path);
@@ -58,12 +61,10 @@ public class MessageService {
                 return Collections.emptyList();
             }
 
+            int firstId = Math.max(0, lastId + 1 - this.maxRead);
             lastId = clamp(0, lastId, lines.size() - 1);
-            int firstId = Math.max(0, lastId - this.maxRead);
 
-            List<String> messages = new ArrayList<>(lines.subList(firstId, lastId + 1));
-            //messages = messages.stream().map(this::toJson).toList();
-            //Collections.reverse(messages);
+            List<String> messages = new ArrayList<>(lines.subList(firstId, lastId+1));
             return messages;
         } catch (IOException e) {
             e.printStackTrace();
